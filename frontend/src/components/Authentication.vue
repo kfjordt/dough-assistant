@@ -1,35 +1,45 @@
 <template>
     <div>
-        <button @click="login">Login Using Google</button>
-        <!-- <div v-if="userDetails">
-            <h2>User Details</h2>
-            <p>Name: {{ userDetails.name }}</p>
-            <p>Email: {{ userDetails.email }}</p>
-            <p>Profile Picture: <img :src="userDetails.picture" alt="Profile Picture"></p>
-        </div> -->
+        <button @click="loginWithGoogle">Login Using Google</button>
     </div>
 </template>
 
+
 <script setup lang="ts">
 import { googleSdkLoaded } from "vue3-google-login";
-import axios from "axios";
 import { defineComponent } from "vue";
+import { clientSecrets } from '../clientSecrets';
 
-const login = () => {
+const loginWithGoogle = () => {
     googleSdkLoaded(google => {
-        google.accounts.oauth2.initCodeClient({
-            client_id: "",
-            scope: "email profile openid",
-            redirect_uri: "http://localhost:4000/auth/callback",
-            callback: response => {
-                if (!response.code) {
-                    return
-                }
-                
-                console.log(response.code)
+        google.accounts.oauth2.initTokenClient({
+            client_id: clientSecrets.googleClientId,
+            scope: "email profile",
+            callback: (response) => {
+                fetchUserInfo(response.access_token)
             }
-        }).requestCode()
+        }).requestAccessToken()
+
     });
 }
 
+const fetchUserInfo = (accessToken: string) => {
+    // Define the Google API endpoint for user info
+    const userInfoEndpoint = 'https://www.googleapis.com/oauth2/v2/userinfo';
+
+    // Make a GET request to the user info endpoint
+    fetch(userInfoEndpoint, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Here, 'data' will contain the user's email and profile information
+            console.log('User Info:', data);
+        })
+        .catch(error => {
+            console.error('Failed to fetch user info:', error);
+        });
+}
 </script>

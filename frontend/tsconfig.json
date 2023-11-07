@@ -1,11 +1,17 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
+    "files": [],
+    "references": [
+        {
+            "path": "./tsconfig.node.json"
+        },
+        {
+            "path": "./tsconfig.app.json"
+        }
+    ],
+    "compilerOptions": {
+        "allowImportingTsExtensions": true,
+        "types": [
+            "node","gapi"
+        ]
     },
-    {
-      "path": "./tsconfig.app.json"
-    }
-  ]
 }

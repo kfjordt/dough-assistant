@@ -6,11 +6,11 @@ using System;
 
 [Route("api/expenses")]
 [ApiController]
-public class ItemsController : ControllerBase
+public class ExpenseController : ControllerBase
 {
     private readonly AppDbContext _context;
 
-    public ItemsController(AppDbContext context)
+    public ExpenseController(AppDbContext context)
     {
         _context = context;
     }

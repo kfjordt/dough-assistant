@@ -8,10 +8,17 @@ namespace BudgetBffBackend.Models
 {
     public class Expense
     {
-        public int Id { get; set; }
+        [Key]
+        public string ExpenseId { get; set; }
+
+        [Required]
         public string ExpenseName { get; set; }
-        public int Amount { get; set; }
-        public int UserId { get; set; }
+
+        [Required]
+        public double Amount { get; set; }
+
+        public string UserId { get; set; }
+
         [ForeignKey("UserId")]
         public User User { get; set; }
     }

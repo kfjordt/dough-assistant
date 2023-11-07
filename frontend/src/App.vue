@@ -4,13 +4,12 @@ import MainView from './components/MainView.vue';
 import NavBar from './components/NavBar.vue';
 import Authentication from './components/Authentication.vue'
 
+
 </script>
 
 <template>
     <div class="app">
         <Authentication />
-        <!-- <NavBar />
-        <MainView /> -->
     </div>
 </template>
 
@@ -29,7 +28,7 @@ import Authentication from './components/Authentication.vue'
     --navbar-color-text-secondary: #a2bfa2;
     --navbar-color-button-primary: #3c5057;
     --navbar-color-button-secondary: #4b656e;
-    
+
     --mainview-color-bg-primary: #101517;
     --mainview-color-bg-secondary: #2a383d;
     --mainview-color-text-primary: #7fa77e;
