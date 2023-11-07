@@ -1,13 +1,16 @@
 <script setup lang="ts">
+import type AuthenticationVue from './components/Authentication.vue';
 import MainView from './components/MainView.vue';
 import NavBar from './components/NavBar.vue';
+import Authentication from './components/Authentication.vue'
 
 </script>
 
 <template>
     <div class="app">
-        <NavBar />
-        <MainView />
+        <Authentication />
+        <!-- <NavBar />
+        <MainView /> -->
     </div>
 </template>
 

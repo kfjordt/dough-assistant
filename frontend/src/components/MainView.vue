@@ -1,24 +1,15 @@
-<script lang="ts">
-import { DateWrapper } from '../models/DateWrapper';
-
-export default {
-    computed: {
-        weeksInCurrentMonth() {
-            return DateWrapper.fromToday().getWeeksInSameMonth()
-        }
-    },
-};
+<script setup lang="ts">
+import { DateTime } from '../models/DateTime';
+const weeksInCurrentMonth = DateTime.fromToday().getWeeksInSameMonth()
 </script>
 
 <template>
     <div class="main-view">
-        <Week 
-        v-for="(days, idx) in weeksInCurrentMonth" 
-        :key="idx"
-        :days="days" />
+        <Week v-for="(days, idx) in weeksInCurrentMonth" :key="idx" :days="days" />
     </div>
 </template>
  
+
 <style scoped>
 .main-view {
     background-color: var(--mainview-color-bg-primary);

@@ -17,7 +17,9 @@ namespace BudgetBffBackend.Contexts
         {
             options.UseNpgsql(_configuration.GetConnectionString("DefaultConnection"));
         }
+
         public DbSet<Expense> Expenses { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 
 }

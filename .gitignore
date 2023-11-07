@@ -1,0 +1,6 @@
+frontend/node_modules/
+frontend/.vscode/
+backend/obj/
+backend/bin/
+backend/.vs/
+secrets.json

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Kasper\\Documents\\Projects\\budget-bff\\BudgetBffBackend\\BudgetBffBackend.csproj": {}
+    "C:\\Users\\Kasper\\Documents\\Projects\\dough-assistant\\backend\\BudgetBffBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Kasper\\Documents\\Projects\\budget-bff\\BudgetBffBackend\\BudgetBffBackend.csproj": {
+    "C:\\Users\\Kasper\\Documents\\Projects\\dough-assistant\\backend\\BudgetBffBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Kasper\\Documents\\Projects\\budget-bff\\BudgetBffBackend\\BudgetBffBackend.csproj",
+        "projectUniqueName": "C:\\Users\\Kasper\\Documents\\Projects\\dough-assistant\\backend\\BudgetBffBackend.csproj",
         "projectName": "BudgetBffBackend",
-        "projectPath": "C:\\Users\\Kasper\\Documents\\Projects\\budget-bff\\BudgetBffBackend\\BudgetBffBackend.csproj",
+        "projectPath": "C:\\Users\\Kasper\\Documents\\Projects\\dough-assistant\\backend\\BudgetBffBackend.csproj",
         "packagesPath": "C:\\Users\\Kasper\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Kasper\\Documents\\Projects\\budget-bff\\BudgetBffBackend\\obj\\",
+        "outputPath": "C:\\Users\\Kasper\\Documents\\Projects\\dough-assistant\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Kasper\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,6 +40,14 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.Google": {
+              "target": "Package",
+              "version": "[6.0.24, )"
+            },
+            "Microsoft.AspNetCore.Cors": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
