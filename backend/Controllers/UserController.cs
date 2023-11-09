@@ -22,6 +22,7 @@ namespace BudgetBffBackend.Controllers
         [HttpPost]
         public IActionResult AddUser([FromBody] User user)
         {
+            Console.WriteLine("test");
             try
             {
                 _context.Users.Add(user);
@@ -29,31 +30,9 @@ namespace BudgetBffBackend.Controllers
                 return Ok();
             }
             catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet]
-        public IActionResult GetUserByEmail([FromQuery] string email)
-        {
-            try
-            {
-                // Use the 'email' parameter to fetch the user by email
-                var user = _context.Users.FirstOrDefault(u => u.GoogleEmail == email);
-
-                if (user != null)
-                {
-                    return Ok(user);
-                }
-                else
-                {
-                    return NotFound("User not found");
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
+            { 
+                Console.WriteLine(user);
+                return Ok(ex.Message);
             }
         }
 
