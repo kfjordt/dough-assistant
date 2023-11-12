@@ -6,7 +6,4 @@
 import { Icons } from '../../models/icons/Icons';
 import { InteractableElementLight } from '../../models/style/InteractableElementStyles';
 import Icon from '../reusable/Icon.vue';
-
 </script>
-
-<style scoped></style>

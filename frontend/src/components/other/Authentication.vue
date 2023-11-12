@@ -19,8 +19,6 @@ const handleBearerToken = (bearerToken: string) => {
                 throw new Error("Token could not be verified by Google");
             }
 
-            console.log(tokenState);
-
             if (tokenState.validity === TokenValidity.ValidUserDoesNotExist) {
                 await ApiService.postUser(tokenState.user.email, tokenState.user.name);
             }
