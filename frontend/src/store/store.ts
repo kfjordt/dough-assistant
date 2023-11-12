@@ -1,30 +1,41 @@
 import { reactive, readonly } from 'vue';
 import { UserState } from './UserState';
+import { TooltipState } from './TooltipState';
 
-const state = reactive({
-    userState: new UserState(false)
+type StoreState = {
+    userState: UserState
+    tooltipState?: TooltipState
+}
+const state = reactive<StoreState>({
+    userState: { isLoggedIn: false }
 });
 
 const mutations = {
     setUserState(newUserState: UserState) {
         state.userState = newUserState
+    },
+    setTooltipState(newTooltipState: TooltipState) {
+        state.tooltipState = newTooltipState
     }
 };
 
 const actions = {
     setCurrentlyLoggedInUser(email: string, bearerToken: string) {
-        mutations.setUserState(
-            new UserState(true, email, bearerToken)
-        )
+        mutations.setUserState({
+            isLoggedIn: true,
+            email: email, 
+            bearerToken: bearerToken})
     },
     setUserToLoggedOut() {
-        mutations.setUserState(
-            new UserState(false)
-        )
+        mutations.setUserState({
+            isLoggedIn: false
+        })
+    }, 
+    setTooltip(tooltip: TooltipState) {
+        mutations.setTooltipState(tooltip)
     }
 };
 
-// Create a read-only version of the state for external access
 const store = readonly({
     state,
     mutations,
