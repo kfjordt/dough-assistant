@@ -1,39 +1,64 @@
 <script setup lang="ts">
-import type AuthenticationVue from './components/Authentication.vue';
-import MainView from './components/MainView.vue';
-import NavBar from './components/NavBar.vue';
-import Authentication from './components/Authentication.vue'
+import MainView from './components/mainApp/MainView.vue';
+import store from './store/store';
+import Authentication from './components/other/Authentication.vue';
+import { getCookie } from 'typescript-cookie';
+import { onMounted, ref } from 'vue';
+import { TokenValidity, TokenValidator } from './models/common/TokenValidator';
+import { ApiService } from './api/ApiService';
+import Icon from './components/reusable/Icon.vue';
+import { Icons } from './models/icons/Icons';
+import { InteractableElementLight } from './models/style/InteractableElementStyles';
+import Loading from './components/other/Loading.vue';
 
+const isLoading = ref(true);
 
+onMounted(() => {
+    const bearerToken = getCookie("BearerToken")
+
+    if (!bearerToken) {
+        isLoading.value = false
+        return
+    }
+
+    const validator = new TokenValidator(bearerToken)
+    validator.getState().then(tokenState => {
+        if (tokenState.validity === TokenValidity.ValidUserExists) {
+            ApiService.getUserByEmail(tokenState.user.email)
+                .then(user => {
+                    store.actions.setCurrentlyLoggedInUser(user.email, bearerToken)
+                    isLoading.value = false
+                })
+        }
+        else {
+            isLoading.value = false
+        }
+    })
+})
 </script>
 
 <template>
-    <div class="app">
-        <Authentication />
+    <div class="app-container">
+        <Loading v-if="isLoading" class="app-loading-screen" />
+        <div class="app" v-else>
+            <MainView v-if="store.state.userState.isLoggedIn" />
+            <Authentication v-else />
+        </div>
     </div>
 </template>
 
 <style scoped>
-.app {
+.app-container {
     width: 100vw;
     height: 100vh;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', 'Arial Narrow', Arial, sans-serif;
 }
 
-.app {
-    --navbar-color-bg-primary: #1f2a2e;
-    --navbar-color-bg-secondary: #243135;
-    --navbar-color-text-primary: #cdcdcd;
-    --navbar-color-text-secondary: #a2bfa2;
-    --navbar-color-button-primary: #3c5057;
-    --navbar-color-button-secondary: #4b656e;
-
-    --mainview-color-bg-primary: #101517;
-    --mainview-color-bg-secondary: #2a383d;
-    --mainview-color-text-primary: #7fa77e;
-    --mainview-color-text-secondary: #50744f;
-
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+.app-loading-screen {
+    width: 20%;
+    height: 20%;
 }
 </style>

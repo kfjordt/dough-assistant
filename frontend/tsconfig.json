@@ -10,6 +10,7 @@
     ],
     "compilerOptions": {
         "allowImportingTsExtensions": true,
+        "target": "es5",
         "types": [
             "node","gapi"
         ]
