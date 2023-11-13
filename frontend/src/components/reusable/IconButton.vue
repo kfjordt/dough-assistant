@@ -46,7 +46,6 @@ const setPressed = (pressed: boolean) => {
 
 const emit = defineEmits(['click']);
 const handleClick = () => {
-    setHovered(false)
     emit('click');
 };
 
@@ -86,7 +85,7 @@ const setTooltip = (set: boolean) => {
 .icon-button {
     display: inline-block;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 </style>
   

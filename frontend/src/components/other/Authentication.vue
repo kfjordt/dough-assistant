@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { googleSdkLoaded } from "vue3-google-login";
 import { ref } from 'vue';
-import { clientSecrets } from '../../clientSecrets';
+import { clientSecrets } from '../../ClientSecrets';
 import { ApiService } from '../../api/ApiService';
 import store from "../../store/store";
 import { DateTime } from '../../models/common/DateTime';
