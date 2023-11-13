@@ -1,15 +1,23 @@
 <template>
     <div class="calendar">
-        calendar
+        <Week v-for="(week, index) in weeksInMonth" :week="week" :key="index" />
     </div>
 </template>
 
 <script setup lang="ts">
+import store from '../../store/store';
+import { computed } from '@vue/reactivity';
+import Week from './Week.vue';
+
+const weeksInMonth = computed(() => store.state.calendarState.selectedDate.getWeeksInSameMonth())
 
 </script>
 
 <style scoped>
 .calendar {
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 </style>
