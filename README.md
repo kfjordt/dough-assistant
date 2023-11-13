@@ -5,3 +5,5 @@ Web application for tracking monthly expenses.
 - Frontend: Vue 3 with TypeScript
 - Backend: ASP.NET 6.0 with C#
 - Database: PostgreSQL
+
+Deployed using AWS RDS and Elastic Beanstalk
