@@ -4,6 +4,7 @@ import { IElement } from '../models/style/IElement';
 
 export type TooltipState = {
     isTooltipLoaded: boolean,
+    tooltipTimeoutId: NodeJS.Timeout 
     anchorElement?: HtmlBoundingBox
     tooltip?: Tooltip
 }
