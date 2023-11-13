@@ -1,13 +1,15 @@
 import { reactive, readonly } from 'vue';
 import { UserState } from './UserState';
-import { TooltipState } from './TooltipState';
+import { TooltipState, Tooltip } from './TooltipState';
+import { HtmlBoundingBox } from '../models/geometry/HtmlBoundingBox';
 
 type StoreState = {
     userState: UserState
-    tooltipState?: TooltipState
+    tooltipState: TooltipState
 }
 const state = reactive<StoreState>({
-    userState: { isLoggedIn: false }
+    userState: { isLoggedIn: false },
+    tooltipState: { isTooltipLoaded: false }
 });
 
 const mutations = {
@@ -23,16 +25,26 @@ const actions = {
     setCurrentlyLoggedInUser(email: string, bearerToken: string) {
         mutations.setUserState({
             isLoggedIn: true,
-            email: email, 
-            bearerToken: bearerToken})
+            email: email,
+            bearerToken: bearerToken
+        })
     },
     setUserToLoggedOut() {
         mutations.setUserState({
             isLoggedIn: false
         })
-    }, 
-    setTooltip(tooltip: TooltipState) {
-        mutations.setTooltipState(tooltip)
+    },
+    setTooltip(tooltip: Tooltip, elementBb: HtmlBoundingBox) {
+        mutations.setTooltipState({
+            isTooltipLoaded: true,
+            tooltip: tooltip,
+            anchorElement: elementBb
+        })
+    },
+    closeTooltip() {
+        mutations.setTooltipState({
+            isTooltipLoaded: false
+        })
     }
 };
 

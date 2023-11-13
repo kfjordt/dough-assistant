@@ -7,7 +7,6 @@ import { PropType } from 'vue';
 import { Icons, getIconAsStr } from '../../models/icons/Icons';
 import { ColorWrapper } from '../../models/style/ColorWrapper';
 
-
 const props = defineProps({
     icon: {
         type: Number as PropType<Icons>,
@@ -24,7 +23,6 @@ const props = defineProps({
 
 const iconAsStr = getIconAsStr(props.icon)
 const animation = props.isSpinning ? "spin" : undefined
-
 </script>
 
 <style scoped>

@@ -1,6 +1,7 @@
 <template>
-    <div class="icon-button" :style="{ backgroundColor: bgColor }" @click="handleClick" @mousedown="setPressed(true)"
-        @mouseup="setPressed(false)" @mouseout="setHovered(false)" @mouseover="setHovered(true)">
+    <div ref="iconButton" class="icon-button" :style="{ backgroundColor: bgColor }" @click="handleClick"
+        @mousedown="setPressed(true)" @mouseup="setPressed(false)" @mouseout="setHovered(false)"
+        @mouseover="setHovered(true)">
         <Icon :color="props.elementStyle.color" :icon="props.icon" :isSpinning="false" />
     </div>
 </template>
@@ -11,6 +12,10 @@ import { IInteractableElement } from '../../models/style/IInteractableElement';
 import { computed } from '@vue/reactivity';
 import Icon from "./Icon.vue"
 import { Icons } from '../../models/icons/Icons';
+import store from '../../store/store';
+import { Tooltip } from '../../store/TooltipState';
+import { HtmlBoundingBox } from '../../models/geometry/HtmlBoundingBox';
+import { Point } from '../../models/geometry/Points';
 
 const props = defineProps({
     icon: {
@@ -20,6 +25,10 @@ const props = defineProps({
     elementStyle: {
         type: Object as PropType<IInteractableElement>,
         required: true
+    },
+    tooltip: {
+        type: Object as PropType<Tooltip>,
+        required: false
     }
 });
 
@@ -28,6 +37,7 @@ const isPressed = ref(false)
 
 const setHovered = (hovered: boolean) => {
     isHovered.value = hovered;
+    setTooltip(hovered)
 };
 
 const setPressed = (pressed: boolean) => {
@@ -36,6 +46,7 @@ const setPressed = (pressed: boolean) => {
 
 const emit = defineEmits(['click']);
 const handleClick = () => {
+    setHovered(false)
     emit('click');
 };
 
@@ -50,6 +61,25 @@ const bgColor = computed(() => {
         return props.elementStyle.backgroundColor.toHex();
     }
 });
+
+const iconButton = ref<HTMLDivElement | null>(null);
+
+const setTooltip = (set: boolean) => {
+    if (set && props.tooltip) {
+        const clientRect = iconButton.value.getBoundingClientRect()
+        store.actions.setTooltip(
+            props.tooltip,
+            new HtmlBoundingBox(
+                new Point(clientRect.x, clientRect.y + clientRect.height),
+                clientRect.height,
+                clientRect.width
+            )
+        )
+    } else {
+        store.actions.closeTooltip()
+    }
+}
+
 </script>
   
 <style scoped>

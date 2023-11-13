@@ -1,17 +1,27 @@
 <template>
     <div class="navbar">
-        <IconButton @click="handleLogoutClick" :elementStyle="InteractableElementLight" :icon="Icons.Gear" />
+        <IconButton @click="handleLogoutClick" :elementStyle="InteractableElementLight" :icon="Icons.Gear"
+            :tooltip="settingsTooltip" />
     </div>
 </template>
 
 <script setup lang="ts">
 import IconButton from '../reusable/IconButton.vue';
 import store from '../../store/store';
-import { InteractableElementLight } from '../../models/style/InteractableElementStyles';
+import { InteractableElementLight, ElementLight } from '../../models/style/Styles';
 import { Icons } from '../../models/icons/Icons';
+import { Tooltip } from '../../store/TooltipState';
+import { Anchor } from '../../models/geometry/Anchor';
 
 const handleLogoutClick = () => {
     store.actions.setUserToLoggedOut()
+}
+
+const settingsTooltip: Tooltip = {
+    content: "Open settings",
+    shortcut: "Ctrl+S",
+    anchor: Anchor.Southeast, 
+    style: ElementLight
 }
 
 </script>

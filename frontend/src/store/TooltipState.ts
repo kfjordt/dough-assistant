@@ -1,17 +1,16 @@
+import { HtmlBoundingBox } from '../models/geometry/HtmlBoundingBox';
+import { Anchor } from '../models/geometry/Anchor';
+import { IElement } from '../models/style/IElement';
+
 export type TooltipState = {
-    content: string
-    header?: string
-    anchor: TooltipAnchor
-    position: { x: number, y: number }
+    isTooltipLoaded: boolean,
+    anchorElement?: HtmlBoundingBox
+    tooltip?: Tooltip
 }
 
-export enum TooltipAnchor {
-    West,
-    Northwest,
-    North,
-    Northeast,
-    East,
-    Southeast,
-    South,
-    Southwest
+export type Tooltip = {
+    content: string
+    shortcut?: string
+    anchor: Anchor
+    style: IElement
 }
