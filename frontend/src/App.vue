@@ -37,26 +37,26 @@ onMounted(() => {
 
 <template>
     <div class="app-container">
-        <!-- Main app components -->
         <Loading v-if="isLoading" class="app-loading-screen" />
         <div class="app" v-else>
             <MainView v-if="store.state.userState.isLoggedIn" />
             <Authentication v-else />
         </div>
-
-        <!-- Static modals etc -->
         <Tooltip />
     </div>
 </template>
 
 <style scoped>
 .app-container {
+    font-family: 'Segoe UI', 'Arial Narrow', Arial, sans-serif;
+}
+
+.app {
     width: 100vw;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Segoe UI', 'Arial Narrow', Arial, sans-serif;
 }
 
 .app-loading-screen {
