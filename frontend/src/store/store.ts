@@ -4,91 +4,90 @@ import { TooltipState, Tooltip } from './TooltipState';
 import { HtmlBoundingBox } from '../models/geometry/HtmlBoundingBox';
 import { CalendarState } from './CalendarState';
 import { DateTime } from '../models/common/DateTime';
+import { StyleState } from './StyleState';
+import { ColorPalette, getPalette } from '../models/style/ColorPalette';
+import { standardTextSizeFactors, standardRoundedCornerSizes } from '../models/style/StandardSizeFactors';
+import { getSectionStyles } from '../models/style/SectionStyles';
+import { ColorWrapper } from '../models/style/ColorWrapper';
+import { defineStore } from 'pinia'
 
-type StoreState = {
+export type StoreState = {
     userState: UserState
     tooltipState: TooltipState
     calendarState: CalendarState
+    styleState: StyleState
 }
-const state = reactive<StoreState>({
+
+const intialState: StoreState = {
     userState: { isLoggedIn: true },
     tooltipState: { isTooltipLoaded: false, tooltipTimeoutId: null },
-    calendarState: {
-        selectedDate: DateTime.fromNow()
-    }
-});
+    calendarState: { selectedDate: DateTime.fromNow() },
+    styleState: { mode: "dark" }
+}
 
-const mutations = {
-    setUserState(newUserState: UserState) {
-        state.userState = newUserState;
+
+const getters = {
+    style: (state) => {
+        return getSectionStyles(getPalette((state as StoreState).styleState.mode))
     },
-    setTooltipState(newTooltipState: TooltipState) {
-        state.tooltipState = newTooltipState
+    currentCalendarState: (state) => {
+        return (state as StoreState).calendarState.selectedDate
     },
-    clearTooltipTimeout() {
-        if (state.tooltipState.tooltipTimeoutId !== null) {
-            clearTimeout(state.tooltipState.tooltipTimeoutId);
-            state.tooltipState.tooltipTimeoutId = null;
-        }
-    },
-    setCalendarState(newCalendarState: CalendarState) {
-        state.calendarState = newCalendarState
+    currentTooltipState: (state) => {
+        return (state as StoreState).tooltipState
     }
-};
+}
 
 const actions = {
     setCurrentlyLoggedInUser(email: string, bearerToken: string) {
-        mutations.setUserState({
+        (this as StoreState).userState = {
             isLoggedIn: true,
             email: email,
             bearerToken: bearerToken
-        })
+        }
     },
     setUserToLoggedOut() {
-        mutations.setUserState({
+        (this as StoreState).userState = {
             isLoggedIn: false
-        })
+        }
+    },
+    clearTooltipTimeout() {
+        const timeoutId = (this as StoreState).tooltipState.tooltipTimeoutId
+        if (timeoutId !== null) {
+            clearTimeout(timeoutId)
+        }
     },
     setTooltip(tooltip: Tooltip, elementBb: HtmlBoundingBox) {
-        mutations.clearTooltipTimeout();
         const tooltipTimeoutId = setTimeout(() => {
-            mutations.setTooltipState({
+            (this as StoreState).tooltipState = {
                 isTooltipLoaded: true,
                 tooltip: tooltip,
                 anchorElement: elementBb,
                 tooltipTimeoutId: null
-            });
-        }, 500);
+            }
+        }, 500)
 
-        mutations.setTooltipState({
-            isTooltipLoaded: false,
-            tooltipTimeoutId: tooltipTimeoutId
-        });
     },
     closeTooltip() {
-        mutations.clearTooltipTimeout();
-
-        mutations.setTooltipState({
+        (this as StoreState).tooltipState = {
             isTooltipLoaded: false,
             tooltipTimeoutId: null
-        });
+        };
     },
     incrementMonth() {
-        mutations.setCalendarState({
-            selectedDate: state.calendarState.selectedDate.addMonths(1)
-        })
+        (this as StoreState).calendarState.selectedDate.addMonths(1)
     },
     decrementMonth() {
-        mutations.setCalendarState({
-            selectedDate: state.calendarState.selectedDate.addMonths(-1)
-        })
+        (this as StoreState).calendarState.selectedDate.addMonths(-1)
+    },
+    toggleDarkMode() {
+        (this as StoreState).styleState.mode = "dark"
     }
 };
 
-const store = readonly({
-    state,
-    mutations,
-    actions,
-});
+export const useStore = defineStore('store', {
+    state: () => intialState,
+    getters: getters,
+    actions: actions
+})
 
-export default store;

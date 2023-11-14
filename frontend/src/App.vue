@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import MainView from './components/mainApp/MainView.vue';
-import store from './store/store';
 import Authentication from './components/other/Authentication.vue';
 import Tooltip from './components/other/Tooltip.vue';
 import { getCookie } from 'typescript-cookie';
@@ -8,7 +7,10 @@ import { onMounted, ref } from 'vue';
 import { TokenValidity, TokenValidator } from './models/common/TokenValidator';
 import { ApiService } from './api/ApiService';;
 import Loading from './components/other/Loading.vue';
+import { getSectionStyles } from './models/style/SectionStyles';
+import { useStore } from './store/store';
 
+const store = useStore()
 const isLoading = ref(true);
 
 onMounted(() => {
@@ -24,7 +26,7 @@ onMounted(() => {
         if (tokenState.validity === TokenValidity.ValidUserExists) {
             ApiService.getUserByEmail(tokenState.user.email)
                 .then(user => {
-                    store.actions.setCurrentlyLoggedInUser(user.email, bearerToken)
+                    store.setCurrentlyLoggedInUser(user.email, bearerToken)
                     isLoading.value = false
                 })
         }
@@ -38,8 +40,8 @@ onMounted(() => {
 <template>
     <div class="app-container">
         <Loading v-if="isLoading" class="app-loading-screen" />
-        <div class="app" v-else>
-            <MainView v-if="store.state.userState.isLoggedIn" />
+        <div v-else class="app">
+            <MainView v-if="store.userState.isLoggedIn" />
             <Authentication v-else />
         </div>
         <Tooltip />

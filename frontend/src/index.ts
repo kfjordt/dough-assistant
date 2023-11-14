@@ -13,5 +13,6 @@ allIcons.forEach(icon => {
 const app = createApp(App)
 
 app.component("v-icon", OhVueIcon);
+
 app.use(createPinia())
 app.mount('#app')
