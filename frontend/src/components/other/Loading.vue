@@ -1,9 +1,11 @@
 <template>
-    <Icon :icon="Icons.Spinner" :isSpinning="true" :color="InteractableElementLight.backgroundColor" />
+    <Icon :icon="Icons.Spinner" :isSpinning="true" :style="iconStyle" />
 </template>
 
 <script setup lang="ts">
-import { Icons } from '../../models/icons/Icons';
-import { InteractableElementLight } from '../../models/style/Styles';
-import Icon from '../reusable/Icon.vue';
+import { useStore } from '../../store/store';
+import { Icons } from "../../models/icons/Icons"
+import Icon from "../reusable/Icon.vue"
+
+const iconStyle = useStore().style.modals.loading
 </script>

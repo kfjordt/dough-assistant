@@ -3,12 +3,14 @@ import { googleSdkLoaded } from "vue3-google-login";
 import { ref } from 'vue';
 import { clientSecrets } from '../../ClientSecrets';
 import { ApiService } from '../../api/ApiService';
-import store from "../../store/store";
 import { DateTime } from '../../models/common/DateTime';
 import { setCookie } from 'typescript-cookie'
 import { TokenValidator, TokenValidity, TokenState } from '../../models/common/TokenValidator';
+import { useStore } from '../../store/store';
 
 const stayLoggedIn = ref(false);
+
+const store = useStore()
 
 const handleBearerToken = (bearerToken: string) => {
     const validator = new TokenValidator(bearerToken)
@@ -24,7 +26,7 @@ const handleBearerToken = (bearerToken: string) => {
             }
 
             ApiService.getUserByEmail(tokenState.user.email)
-                .then(user => store.actions.setCurrentlyLoggedInUser(user.email, bearerToken))
+                .then(user => store.setCurrentlyLoggedInUser(user.email, bearerToken))
         })
 
     if (stayLoggedIn.value) {

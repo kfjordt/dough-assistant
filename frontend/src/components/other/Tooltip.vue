@@ -1,5 +1,5 @@
 <template>
-    <div v-if="tooltipData.isTooltipLoaded" :style="getStyle()" class="tooltip">
+    <div v-if="tooltipData.isTooltipLoaded" :style="styleAsCss" class="tooltip">
         <span class="tooltip-main-text">{{ tooltipData.tooltip.content }}</span>
         <span class="tooltip-shortcut-text">{{ tooltipData.tooltip.shortcut }}</span>
     </div>
@@ -8,24 +8,23 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity';
 import { Anchor } from '../../models/geometry/Anchor';
-import { ref } from 'vue';
-import store from '../../store/store';
+import { useStore } from '../../store/store';
 
-const tooltipData = computed(() => {
-    return store.state.tooltipState
-});
+const store = useStore()
+const tooltipData = store.tooltipState
+const tooltipStyle = store.style.modals.tooltip
 
-const getStyle = () => {
+const styleAsCss = computed(() => {
     return {
         ...getPosition(),
-        backgroundColor: tooltipData.value.tooltip.style.backgroundColor.toHex(),
-        color: tooltipData.value.tooltip.style.color.toHex()
+        backgroundColor: tooltipStyle.elementStyle.backgroundColor,
+        color: tooltipStyle.primaryTextStyle.color
     }
-}
+})
 
 const getPosition = () => {
-    const anchor = tooltipData.value.tooltip.anchor;
-    const bb = tooltipData.value.anchorElement;
+    const anchor = tooltipData.tooltip.anchor;
+    const bb = tooltipData.anchorElement;
 
     const anchorPoint = bb.getAnchorPoint(anchor);
 
@@ -85,6 +84,10 @@ const getPosition = () => {
 
     return position;
 };
+
+
+
+
 
 </script>
 

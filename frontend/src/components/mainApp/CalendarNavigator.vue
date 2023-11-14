@@ -1,32 +1,35 @@
 <template>
-    <div class="calendar-navigator">
-        <IconButton @click="() => changeMonth(false)" :elementStyle="InteractableElementLight" :icon="Icons.LeftArrow" />
-        <IconButton @click="() => changeMonth(true)" :elementStyle="InteractableElementLight" :icon="Icons.RightArrow" />
+    <!-- <div class="calendar-navigator">
+        <IconButton @click="() => changeMonth(false)" :style="style.navBar.calendarNavigationButton" :icon="Icons.LeftArrow" />
+        <IconButton @click="() => changeMonth(true)" :style="style.navBar.calendarNavigationButton" :icon="Icons.RightArrow" />
         <span class="calendar-navigator-label">{{ monthAndYear }}</span>
-    </div>
+    </div> -->
 </template>
 
 
 <script setup lang="ts">
-import { Icons } from '../../models/icons/Icons';
-import { InteractableElementLight } from '../../models/style/Styles';
-import IconButton from '../reusable/IconButton.vue';
-import store from '../../store/store';
-import { computed } from '@vue/reactivity';
+// import { Icons } from '../../models/icons/Icons';
+// import IconButton from '../reusable/IconButton.vue';
+// import store from '../../store/store';
+// import { computed } from '@vue/reactivity';
 
-const monthAndYear = computed(() => {
-    const date = store.state.calendarState.selectedDate
+// const style = computed(() => {
+//     return store.actions.getSectionStyles()
+// })
 
-    return `${date.getMonthAsString()}, ${date.getYearAsString()}`
-})
+// const monthAndYear = computed(() => {
+//     const date = store.state.calendarState.selectedDate
 
-const changeMonth = (increment: boolean) => {
-    if (increment) {
-        store.actions.incrementMonth()
-    } else {
-        store.actions.decrementMonth()
-    }
-}
+//     return `${date.getMonthAsString()}, ${date.getYearAsString()}`
+// })
+
+// const changeMonth = (increment: boolean) => {
+//     if (increment) {
+//         store.actions.incrementMonth()
+//     } else {
+//         store.actions.decrementMonth()
+//     }
+// }
 </script>
 
 <style scoped>

@@ -5,11 +5,12 @@
 </template>
 
 <script setup lang="ts">
-import store from '../../store/store';
+// import store from '../../store/store';
 import { computed } from '@vue/reactivity';
 import Week from './Week.vue';
+import { useStore } from '../../store/store';
 
-const weeksInMonth = computed(() => store.state.calendarState.selectedDate.getWeeksInSameMonth())
+const weeksInMonth = useStore().currentCalendarState.getWeeksInSameMonth()
 
 </script>
 

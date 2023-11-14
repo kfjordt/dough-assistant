@@ -1,6 +1,6 @@
 import { HtmlBoundingBox } from '../models/geometry/HtmlBoundingBox';
 import { Anchor } from '../models/geometry/Anchor';
-import { IElement } from '../models/style/IElement';
+import { ITooltipStyle } from '../models/style/ComponentStyles';
 
 export type TooltipState = {
     isTooltipLoaded: boolean,
@@ -13,5 +13,4 @@ export type Tooltip = {
     content: string
     shortcut?: string
     anchor: Anchor
-    style: IElement
 }

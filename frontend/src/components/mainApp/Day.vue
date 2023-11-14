@@ -11,7 +11,6 @@ import { DateTime } from '../../models/common/DateTime';
 import { PropType } from 'vue';
 import { computed } from '@vue/reactivity';
 
-
 const props = defineProps({
     day: {
         type: Object as PropType<DateTime>,
