@@ -1,14 +1,15 @@
 import { ColorWrapper } from './ColorWrapper';
+
 export class ColorPalette {
-    private firstColor: ColorWrapper;
-    private secondColor: ColorWrapper;
+    firstColor: ColorWrapper;
+    secondColor: ColorWrapper;
 
     constructor(firstColor: ColorWrapper, secondColor: ColorWrapper) {
         this.firstColor = firstColor;
         this.secondColor = secondColor;
     }
 
-    drawSample(factor: number) {
+    drawSample(factor: number): ColorWrapper {
         const firstRgb = this.firstColor.toRgb()
         const secondRgb = this.secondColor.toRgb()
 
@@ -20,7 +21,8 @@ export class ColorPalette {
     }
 }
 
-export const darkModeColorPalette = new ColorPalette(
-    ColorWrapper.fromHex("#FFFFFF"),
-    ColorWrapper.fromHex("#21262d"),
-)
+export const getPalette = (mode: "dark" | "light") => {
+    return mode === "dark"
+        ? new ColorPalette(ColorWrapper.fromRgb(0, 0, 0), ColorWrapper.fromRgb(0, 0, 0),)
+        : new ColorPalette(ColorWrapper.fromRgb(0, 0, 0), ColorWrapper.fromRgb(0, 0, 0),)
+}

@@ -7,12 +7,22 @@ export class ColorWrapper {
         this.model = model;
     }
 
+    getModel() {
+        return this.model
+    }
+
     static fromHex(hex: string) {
         return new ColorWrapper(Color(hex))
     }
 
     static fromRgb(r: number, g: number, b: number) {
         return new ColorWrapper(Color({ r: r, g: g, b: b }))
+    }
+
+    static transparent() {
+        return new ColorWrapper(
+            ColorWrapper.fromRgb(0, 0, 0).getModel().alpha(0) as Color
+        )
     }
 
     toHex() {
@@ -25,5 +35,9 @@ export class ColorWrapper {
             g: this.model.green(),
             b: this.model.blue(),
         }
+    }
+
+    toRgba() {
+        return `rgba(${this.model.red()},${this.model.green()},${this.model.blue()},${this.model.alpha()})`
     }
 }
