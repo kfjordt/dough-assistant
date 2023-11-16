@@ -3,6 +3,7 @@ using System;
 using DoughAssistantBackend.DataContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DoughAssistantBackend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231116202237_SessionsTable")]
+    partial class SessionsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,7 +27,7 @@ namespace DoughAssistantBackend.Migrations
 
             modelBuilder.Entity("DoughAssistantBackend.Models.Expense", b =>
                 {
-                    b.Property<string>("ExpenseId")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
@@ -34,7 +37,12 @@ namespace DoughAssistantBackend.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("ExpenseId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Expenses");
                 });
@@ -55,8 +63,7 @@ namespace DoughAssistantBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Sessions");
                 });
@@ -84,9 +91,7 @@ namespace DoughAssistantBackend.Migrations
                 {
                     b.HasOne("DoughAssistantBackend.Models.User", "User")
                         .WithMany("Expenses")
-                        .HasForeignKey("ExpenseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -94,9 +99,8 @@ namespace DoughAssistantBackend.Migrations
             modelBuilder.Entity("DoughAssistantBackend.Models.Session", b =>
                 {
                     b.HasOne("DoughAssistantBackend.Models.User", "User")
-                        .WithOne("Session")
-                        .HasForeignKey("DoughAssistantBackend.Models.Session", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -104,8 +108,6 @@ namespace DoughAssistantBackend.Migrations
             modelBuilder.Entity("DoughAssistantBackend.Models.User", b =>
                 {
                     b.Navigation("Expenses");
-
-                    b.Navigation("Session");
                 });
 #pragma warning restore 612, 618
         }
