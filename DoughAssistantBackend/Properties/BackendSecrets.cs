@@ -8,5 +8,6 @@ namespace DoughAssistantBackend.Properties
     public class BackendSecrets
     {
         public string DefaultConnectionString { get; set; }
+        public string GoogleClientId { get; set; }
     }
 }

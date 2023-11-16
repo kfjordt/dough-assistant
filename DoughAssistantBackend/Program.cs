@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using DoughAssistantBackend.Properties;
 using DoughAssistantBackend.Services;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ var backendSecrets = await JsonFileReader.ReadAsync<BackendSecrets>("./Propertie
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISessionRepository, SessionRepository>();
 
 // Cors
 builder.Services.AddCors(options =>
@@ -33,6 +35,17 @@ builder.Services.AddCors(options =>
 
 // DTO mappings
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddScoped(provider =>
+{
+    return new SessionService();
+});
+builder.Services.AddScoped(provider =>
+{
+    var mapper = provider.GetRequiredService<IMapper>();
+    return new UserService(mapper);
+}); 
+
 
 // Database context
 builder.Services.AddDbContext<DataContext>(options =>
