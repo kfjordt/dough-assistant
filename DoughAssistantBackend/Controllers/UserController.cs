@@ -4,6 +4,7 @@ using DoughAssistantBackend.Dto;
 using DoughAssistantBackend.Interfaces;
 using DoughAssistantBackend.Models;
 using Microsoft.AspNetCore.Authorization;
+using DoughAssistantBackend.Services;
 
 namespace DoughAssistantBackend.Controllers
 {
@@ -13,11 +14,13 @@ namespace DoughAssistantBackend.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly UserService _userService;
 
-        public UserController(IUserRepository userRepository, IMapper mapper)
+        public UserController(IUserRepository userRepository, IMapper mapper, UserService userService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -27,25 +30,11 @@ namespace DoughAssistantBackend.Controllers
             var users = _mapper.Map<List<UserDto>>(_userRepository.GetUsers());
 
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
             return Ok(users);
-        }
-
-        [HttpGet("{email}")]
-        [ProducesResponseType(200, Type = typeof(UserDto))]
-        [ProducesResponseType(400)]
-        public IActionResult GetUser(string email)
-        {
-            if (!_userRepository.UserExists(email))
-                return NotFound();
-
-            var user = _mapper.Map<UserDto>(_userRepository.GetUser(email));
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            return Ok(user);
         }
 
 
@@ -62,41 +51,15 @@ namespace DoughAssistantBackend.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userMap = _mapper.Map<User>(userToCreate);
+            var newUser = _userService.GenerateNewUser(userToCreate);
 
-            userMap.RegistrationDate = DateTime.UtcNow;
-
-            if (!_userRepository.CreateUser(userMap))
+            if (!_userRepository.CreateUser(newUser))
             {
                 ModelState.AddModelError("", "Something went wrong while saving user");
                 return StatusCode(500, ModelState);
             }
 
             return Ok("Successfully created");
-        }
-
-        [HttpDelete("{email}")]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
-        public IActionResult DeleteUser(string email)
-        {
-            if (!_userRepository.UserExists(email))
-            {
-                return NotFound();
-            }
-
-            var userToDelete = _userRepository.GetUser(email);
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            if (!_userRepository.DeleteUser(userToDelete))
-            {
-                ModelState.AddModelError("", "Something went wrong deleting user");
-            }
-
-            return NoContent();
         }
     }
 }

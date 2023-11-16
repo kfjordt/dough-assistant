@@ -26,14 +26,11 @@ namespace DoughAssistantBackend.Repository
             return Save();
         }
 
-        public User GetUser(int id)
+        public User GetUser(string userId)
         {
-            return _context.Users.Where(user => user.Id == id).FirstOrDefault();    
-        }
-
-        public User GetUser(string email)
-        {
-            return _context.Users.Where(user => user.Email == email).FirstOrDefault();
+            return _context.Users
+                .Where(user => user.UserId == userId)
+                .FirstOrDefault();
         }
 
         public ICollection<User> GetUsers()
@@ -41,15 +38,10 @@ namespace DoughAssistantBackend.Repository
             return _context.Users.ToList();
         }
 
-        public bool UpdateUser(User user)
+        public bool UserExists(string userId)
         {
-            _context.Update(user);
-            return Save();
-        }
-
-        public bool UserExists(string email)
-        {
-            return _context.Users.Any(user => user.Email == email);
+            return _context.Users
+                .Any(user => user.UserId == userId);
         }
 
         public bool Save()
@@ -58,9 +50,5 @@ namespace DoughAssistantBackend.Repository
             return saved > 0;
         }
 
-        public bool UserExists(int id)
-        {
-            return _context.Users.Any(user => user.Id == id);
-        }
     }
 }
