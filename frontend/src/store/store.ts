@@ -19,12 +19,11 @@ export type StoreState = {
 }
 
 const intialState: StoreState = {
-    userState: { isLoggedIn: true },
+    userState: { isLoggedIn: false },
     tooltipState: { isTooltipLoaded: false, tooltipTimeoutId: null },
     calendarState: { selectedDate: DateTime.fromNow() },
     styleState: { mode: "dark" }
 }
-
 
 const getters = {
     style: (state) => {

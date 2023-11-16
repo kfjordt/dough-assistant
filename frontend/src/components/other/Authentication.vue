@@ -7,36 +7,19 @@ import { DateTime } from '../../models/common/DateTime';
 import { setCookie } from 'typescript-cookie'
 import { TokenValidator, TokenValidity, TokenState } from '../../models/common/TokenValidator';
 import { useStore } from '../../store/store';
+import { GoogleApiService } from '../../api/GoogleApiService';
 
 const stayLoggedIn = ref(false);
 
 const store = useStore()
 
-const handleBearerToken = (bearerToken: string) => {
-    const validator = new TokenValidator(bearerToken)
-
-    validator.getState()
-        .then(async (tokenState) => {
-            if (tokenState.validity === TokenValidity.NotValid) {
-                throw new Error("Token could not be verified by Google");
-            }
-
-            if (tokenState.validity === TokenValidity.ValidUserDoesNotExist) {
-                await ApiService.postUser(tokenState.user.email, tokenState.user.name);
-            }
-
-            ApiService.getUserByEmail(tokenState.user.email)
-                .then(user => store.setCurrentlyLoggedInUser(user.email, bearerToken))
-        })
-
-    if (stayLoggedIn.value) {
-        setCookie("BearerToken",
-            bearerToken,
-            {
-                expires: DateTime.fromNow().addDays(30).getModel(),
-                secure: true
-            })
-    }
+const handleAccessToken = (bearerToken: string) => {
+    console.log(bearerToken);
+    const userInfo = GoogleApiService.fetchUserInfo(bearerToken)
+        .then(user => ApiService.requestNewSession(bearerToken, user)
+            .then(res => {  })
+        )
+        .catch(_ => console.log("Failed to fetch user info from Google API"))
 }
 
 const promptUserForGoogleLogin = async () => {
@@ -46,8 +29,8 @@ const promptUserForGoogleLogin = async () => {
             scope: "email profile",
 
             callback: (response) => {
-                const bearerToken = response.access_token;
-                handleBearerToken(bearerToken)
+                const accessToken = response.access_token;
+                handleAccessToken(accessToken)
             }
         }).requestAccessToken()
     });

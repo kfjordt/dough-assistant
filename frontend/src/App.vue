@@ -14,26 +14,26 @@ const store = useStore()
 const isLoading = ref(true);
 
 onMounted(() => {
-    const bearerToken = getCookie("BearerToken")
+    // const bearerToken = getCookie("BearerToken")
 
-    if (!bearerToken) {
+    // if (!bearerToken) {
         isLoading.value = false
-        return
-    }
+    //     return
+    // }
 
-    const validator = new TokenValidator(bearerToken)
-    validator.getState().then(tokenState => {
-        if (tokenState.validity === TokenValidity.ValidUserExists) {
-            ApiService.getUserByEmail(tokenState.user.email)
-                .then(user => {
-                    store.setCurrentlyLoggedInUser(user.email, bearerToken)
-                    isLoading.value = false
-                })
-        }
-        else {
-            isLoading.value = false
-        }
-    })
+    // const validator = new TokenValidator(bearerToken)
+    // validator.getState().then(tokenState => {
+    //     if (tokenState.validity === TokenValidity.ValidUserExists) {
+    //         ApiService.getUserByEmail(tokenState.user.email)
+    //             .then(user => {
+    //                 store.setCurrentlyLoggedInUser(user.email, bearerToken)
+    //                 isLoading.value = false
+    //             })
+    //     }
+    //     else {
+    //         isLoading.value = false
+    //     }
+    // })
 })
 </script>
 
