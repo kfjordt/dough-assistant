@@ -8,6 +8,7 @@ using DoughAssistantBackend.Repository;
 using DoughAssistantBackend.Services;
 using DoughAssistantBackend.Properties;
 using Newtonsoft.Json.Linq;
+using System.Web;
 
 namespace DoughAssistantBackend.Controllers
 {
@@ -17,55 +18,66 @@ namespace DoughAssistantBackend.Controllers
     {
         private readonly ISessionRepository _sessionRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
         private readonly SessionService _sessionService;
-        private readonly UserService _userService;
+        private readonly GoogleService _googleService;
 
-        public SessionController(ISessionRepository sessionRepository, IUserRepository userRepository, SessionService sessionService, UserService userService)
+        public SessionController(ISessionRepository sessionRepository, IUserRepository userRepository, SessionService sessionService, IMapper mapper, GoogleService googleService)
         {
             _sessionRepository = sessionRepository;
             _userRepository = userRepository;
             _sessionService = sessionService;
-            _userService = userService;
+            _mapper = mapper;
+            _googleService = googleService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RequestSessionAsync([FromBody] UserDto userRequesting, [FromQuery] string googleAuthToken)
+        [HttpGet]
+        public async Task<IActionResult> RequestSessionAsync ([FromQuery] string googleAccessToken)
         {
-            var backendSecrets = await JsonFileReader.ReadAsync<BackendSecrets>("./Properties/backendSecrets.json");
-
-            var httpClient = new HttpClient();
-            var tokenInfoEndpoint = $"https://www.googleapis.com/oauth2/v3/tokeninfo?access_token={googleAuthToken}";
-            var response = await httpClient.GetStringAsync(tokenInfoEndpoint);
-
-            JObject tokenInfo = JObject.Parse(response);
-
-            if (!tokenInfo.TryGetValue("sub", out var sub))
+            UserDto user;
+            try
+            {
+                user = await _googleService.VerifyAccessTokenAndGetUser(googleAccessToken);
+            }
+            catch
             {
                 return BadRequest("Invalid access token");
             }
 
-            string userId = sub.ToString();
-            if (!_userRepository.UserExists(userId))
+            if (!_userRepository.UserExists(user.UserId))
             {
-                var newUser = _userService.GenerateNewUser(userRequesting);
+                var newUser = _mapper.Map<User>(user);
                 _userRepository.CreateUser(newUser);
             }
 
-            Session session = _sessionService.GenerateNewSession(userId);
+            bool userAlreadyHasSession = _sessionRepository.UserHasSession(user.UserId);
 
-            if (!_sessionRepository.CreateSession(session))
+            string sessionKey;
+            if (!userAlreadyHasSession)
             {
-                ModelState.AddModelError("", "Something went wrong while saving session");
-                return StatusCode(500, ModelState);
+                Session session = _sessionService.GenerateNewSession(user.UserId);
+
+                if (!_sessionRepository.CreateSession(session))
+                {
+                    ModelState.AddModelError("", "Something went wrong while saving session");
+                    return StatusCode(500, ModelState);
+                }
+
+                sessionKey = session.SessionKey;
+            }
+            else
+            {
+                sessionKey = _sessionRepository.GetSessionByUserId(user.UserId).SessionKey;
             }
 
-            Response.Cookies.Append("SessionKey", session.SessionKey, new CookieOptions
+            Response.Cookies.Append("SessionKey", sessionKey, new CookieOptions
             {
-                HttpOnly = true,
                 Secure = true,
+                HttpOnly = true,
+                SameSite = SameSiteMode.None
             });
 
-            return Ok("Session succesfully created");
+            return Ok(user.UserId);
         }
     }
 }

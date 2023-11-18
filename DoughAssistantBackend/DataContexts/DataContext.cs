@@ -20,13 +20,13 @@ namespace DoughAssistantBackend.DataContexts
                .HasOne(u => u.Session)
                .WithOne(s => s.User)
                .HasForeignKey<Session>(s => s.UserId)
-               .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
+               .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Expenses)
-                .WithOne(e => e.User)
-                .HasForeignKey(e => e.ExpenseId)
-                .OnDelete(DeleteBehavior.Cascade); // Cascade delete Expenses when a User is deleted
+            modelBuilder.Entity<Expense>()
+                .HasOne(e => e.User)
+                .WithMany(u => u.Expenses)
+                .HasForeignKey(e => e.UserId) 
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
