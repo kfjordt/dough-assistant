@@ -1,4 +1,5 @@
 import type { ICloneable } from "./ICloneable"
+import { differenceInDays } from 'date-fns'
 
 export class DateTime implements ICloneable {
     private constructor(private dateModel: Date) { }
@@ -9,6 +10,10 @@ export class DateTime implements ICloneable {
 
     static fromDate(date: Date) {
         return new DateTime(date)
+    }
+
+    static fromUnix(unix: number) {
+        return new DateTime(new Date(unix))
     }
 
     static fromNow() {
@@ -40,47 +45,52 @@ export class DateTime implements ICloneable {
         return this.dateModel.getFullYear().toString()
     }
 
-    getWeeksInSameMonth() {
-        const newDateModel = this.clone().getModel()
-
-        newDateModel.setDate(1)
-        const beginningWeekOffset = (newDateModel.getDay() - 1) * -1
-        newDateModel.setDate(beginningWeekOffset)
-
-        let initialDay = DateTime.fromDate(newDateModel)
-
-        const weekCount = this.getOngoingWeekCount()
-        let weeks: DateTime[][] = []
-
-        for (let i = 0; i < weekCount; i++) {
-            let week: DateTime[] = []
-
-            for (let j = 1; j < 8; j++) {
-                week.push(initialDay.addDays(j))
-            }
-
-            weeks.push(week)
-            initialDay = week[6]
-        }
-
-        return weeks
+    setDayOfMonth(dayOfMonth: number) {
+        this.dateModel.setDate(dayOfMonth + 1)
+        return this
     }
 
-
-    getOngoingWeekCount() {
-        const newDateModel = this
-            .clone()
-            .getModel()
-
-        newDateModel.setDate(1)
-
-        if (newDateModel.getDay() === 1 && newDateModel.getMonth() === 1) {
-            return 4
-        } else {
-            return 5
-        }
+    getDayOfWeek() {
+        return this.dateModel.getDay() === 0
+            ? 6
+            : this.dateModel.getDay() - 1
     }
 
+    getMonth() {
+        return this.dateModel.getMonth()
+    }
+
+    subtractDays(days: number) {
+        this.dateModel.setDate(this.dateModel.getDate() - days)
+        return this
+    }
+
+    differenceInDays(dateTime: DateTime) {
+        return differenceInDays(this.getModel(), dateTime.getModel())
+    }
+
+    getDaysInCurrentMonth(): DateTime[] {
+        const initialDay = this.clone()
+            .setDayOfMonth(0)
+            .subtractDays(
+                this.getDayOfWeek()
+            )
+
+        const lastDay = this.clone()
+            .addMonths(1)
+            .subtractDays(1)
+
+        const totalDayCount = lastDay.differenceInDays(initialDay)
+            + 1
+            + 6 - lastDay.getDayOfWeek()
+
+        let days: DateTime[] = []
+        for (let i = 0; i < totalDayCount; i++) {
+            days.push(initialDay.addDays(i))
+        }
+
+        return days
+    }
 
     addDays(amount: number) {
         const dateCopy = this.clone()
@@ -104,7 +114,7 @@ export class DateTime implements ICloneable {
         return DateTime.fromDate(dateCopy.dateModel)
     }
 
-    getModel() {
+    getModel = () => {
         return this.dateModel
     }
 }

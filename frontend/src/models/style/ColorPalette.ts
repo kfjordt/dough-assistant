@@ -23,6 +23,6 @@ export class ColorPalette {
 
 export const getPalette = (mode: "dark" | "light") => {
     return mode === "dark"
-        ? new ColorPalette(ColorWrapper.fromRgb(0, 0, 0), ColorWrapper.fromRgb(0, 0, 0),)
-        : new ColorPalette(ColorWrapper.fromRgb(0, 0, 0), ColorWrapper.fromRgb(0, 0, 0),)
+        ? new ColorPalette(ColorWrapper.fromRgb(0, 0, 0), ColorWrapper.fromRgb(100, 100, 100))
+        : new ColorPalette(ColorWrapper.fromRgb(230, 230, 230), ColorWrapper.fromRgb(230, 230, 230),)
 }

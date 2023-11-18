@@ -1,29 +1,47 @@
-import { ApiEndpoints } from './ApiEndpoints'
+import { ApiEndpoints } from './ApiEndpoints';
 import { UserDto } from '../models/dto/UserDto'
+import { ExpenseDto } from '../models/dto/ExpenseDto';
 
 export class ApiService {
-    static requestNewSession = async (googleAuthToken: string, user: UserDto) => {
+    static requestNewSession = async (googleAccessToken: string): Promise<UserDto> => {
         const urlParams = new URLSearchParams()
-        urlParams.append('googleAuthToken', googleAuthToken)
+        urlParams.append('googleAccessToken', googleAccessToken)
 
-        const requestNewSessionUrl = ApiEndpoints.REQUEST_SESSION + "?" + urlParams.toString()
-        const requestPayload = {
+        const requestNewSessionUrl = ApiEndpoints.SESSIONS + "?" + urlParams.toString()
+        const response = await fetch(requestNewSessionUrl, {
+            credentials: 'include'
+        })
+
+        if (response.ok) {
+            return await response.json()
+        } else {
+            throw new Error(response.statusText)
+        }
+    }
+
+    static postNewExpense = async (expense: ExpenseDto) => {
+        const response = await fetch(ApiEndpoints.EXPENSES, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(user),
+            credentials: 'include', // Set credentials here
+            body: JSON.stringify(expense),
+        })
+
+        return response
+    }
+
+    static getExpenses = async () => {
+        const response = await fetch(ApiEndpoints.EXPENSES, {
+            credentials: 'include'
+        })
+
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        } else {
+            throw new Error(response.statusText)
         }
-        
-        fetch(requestNewSessionUrl, requestPayload)
-
-
-        // if (response.ok) {
-        //     return response.status
-        // } else {
-        //     throw new Error(
-        //         `Failed to post user. API call returned code ${response.status}`
-        //     )
-        // }
     }
 }

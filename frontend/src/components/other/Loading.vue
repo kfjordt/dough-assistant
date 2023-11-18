@@ -1,11 +1,11 @@
 <template>
-    <Icon :icon="Icons.Spinner" :isSpinning="true" :style="iconStyle" />
+    <Icon :icon="Icons.Spinner" :isSpinning="true" :iconColor="iconColor" />
 </template>
 
 <script setup lang="ts">
-import { useStore } from '../../store/store';
 import { Icons } from "../../models/icons/Icons"
-import Icon from "../reusable/Icon.vue"
+import Icon from "../reusable/IconCard.vue"
+import { useStyleStore } from '../../stores/style';
 
-const iconStyle = useStore().style.modals.loading
+const iconColor = useStyleStore().sectionStyles.other.loading.icon
 </script>

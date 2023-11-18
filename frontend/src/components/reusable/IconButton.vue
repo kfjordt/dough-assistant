@@ -1,71 +1,67 @@
 <template>
-    <!-- <div ref="iconButton" class="icon-button" :style="{ backgroundColor: bgColor }" @click="handleClick"
-        @mousedown="setPressed(true)" @mouseup="setPressed(false)" @mouseout="setHovered(false)"
-        @mouseover="setHovered(true)">
-        <Icon :style="props.icon" :icon="props.icon" :isSpinning="false" />
-    </div> -->
+    <div ref="iconButton" class="icon-button" @click="handleClick" @mouseout="setHovered(false)"
+        @mouseover="setHovered(true)" @mousedown="setPressed(true)" @mouseup="setPressed(false)" :style="{
+            backgroundColor: iconBgColor,
+        }">
+        <IconCard :icon="iconToUse" :isSpinning="false" :iconColor="iconTextColor" />
+    </div>
 </template>
   
 <script setup lang="ts">
-// import { PropType, ref } from 'vue';
-// import { computed } from '@vue/reactivity';
-// import Icon from "./Icon.vue"
-// import { Icons } from '../../models/icons/Icons';
-// import store from '../../store/store';
-// import { Tooltip } from '../../store/TooltipState';
-// import { HtmlBoundingBox } from '../../models/geometry/HtmlBoundingBox';
-// import { Point } from '../../models/geometry/Points';
-// import { IIconButtonStyle } from '../../models/style/ComponentStyles';
+import { PropType, ref } from 'vue';
+import IconCard from "./IconCard.vue"
+import { Icons } from '../../models/icons/Icons';
+import { IIconButtonColorScheme } from '../../models/style/ComponentStyles';
+import { computed } from '@vue/reactivity';
 
-// const props = defineProps({
-//     icon: {
-//         type: Number as PropType<Icons>,
-//         required: true
-//     },
-//     style: {
-//         type: Object as PropType<IIconButtonStyle>,
-//         required: true
-//     },
-//     tooltip: {
-//         type: Object as PropType<Tooltip>,
-//         required: false
-//     }
-// });
+const props = defineProps({
+    icon: {
+        type: Number as PropType<Icons>,
+        required: true
+    },
+    style: {
+        type: Object as PropType<IIconButtonColorScheme>,
+        required: true
+    }
+});
 
-// const isHovered = ref(false);
-// const isPressed = ref(false)
+const isHovered = ref(false);
+const isPressed = ref(false);
 
-// const setHovered = (hovered: boolean) => {
-//     isHovered.value = hovered;
-//     setTooltip(hovered)
-// };
+const iconToUse = computed(() => {
+    return props.icon
+})
 
-// const setPressed = (pressed: boolean) => {
-//     isPressed.value = pressed
-// }
+const iconBgColor = computed(() => {
+    return isPressed.value ? props.style.press : isHovered.value ? props.style.hover : props.style.background
+})
 
-// const emit = defineEmits(['click']);
-// const handleClick = () => {
-//     emit('click');
-// };
+const iconTextColor = computed(() => {
+    return props.style.icon
+})
 
-// const bgColor = computed(() => {
-//     if (isPressed.value) {
-//         return props.style.element.pressColor
-//     }
-//     if (isHovered.value) {
-//         return props.style.element.hoverColor;
-//     } else {
-//         return props.style.element.backgroundColor;
-//     }
-// });
+const setHovered = (hovered: boolean) => {
+    isHovered.value = hovered;
+    // setTooltip(hovered)
+};
 
-// const iconButton = ref<HTMLDivElement | null>(null);
+const setPressed = (pressed: boolean) => {
+    isPressed.value = pressed;
+};
+
+const emit = defineEmits(['click']);
+const handleClick = () => {
+    emit('click');
+};
+
+const iconButton = ref<HTMLDivElement | null>(null);
+
+// const store = useStore()
 
 // const setTooltip = (set: boolean) => {
 //     if (set && props.tooltip) {
 //         const clientRect = iconButton.value.getBoundingClientRect()
-//         store.actions.setTooltip(
+//         store.setTooltip(
 //             props.tooltip,
 //             new HtmlBoundingBox(
 //                 new Point(clientRect.x, clientRect.y + clientRect.height),
@@ -74,7 +70,7 @@
 //             )
 //         )
 //     } else {
-//         store.actions.closeTooltip()
+//         store.closeTooltip()
 //     }
 // }
 
@@ -84,7 +80,7 @@
 .icon-button {
     display: inline-block;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 </style>
   

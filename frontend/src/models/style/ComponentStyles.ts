@@ -1,32 +1,34 @@
-import { IStaticElementStyle, ITextStyle, IBorderElementStyle, IIconStyle, IClickableElementStyle } from './ElementStyles';
+import { ColorWrapper } from './ColorWrapper';
 
-export interface ICardStyle {
-    element: IStaticElementStyle
-    text: ITextStyle
-    border: IBorderElementStyle
+export interface IIconCardColorScheme {
+    icon: string,
+    background: string,
 }
 
-export interface IIconCard {
-    iconStyle: IIconStyle
-    element: IStaticElementStyle
-    border: IBorderElementStyle
+export interface IIconButtonColorScheme {
+    icon: string,
+    background: string,
+    press: string,
+    hover: string
 }
 
-export interface IIconButtonStyle {
-    icon: IIconStyle
-    element: IClickableElementStyle
-    border: IBorderElementStyle
+export interface ICardColorScheme {
+    text: string,
+    background: string,
+    border: string
 }
 
-export interface ICardButtonStyle {
-    textStyle: ITextStyle
-    elementStyle: IStaticElementStyle
-    border: IBorderElementStyle
+export interface ICardButtonColorScheme {
+    text: string,
+    background: string,
+    press: string,
+    hover: string,
+    border: string
 }
 
-export interface ITooltipStyle {
-    primaryTextStyle: ITextStyle,
-    secondaryTextStyle: ITextStyle,
-    elementStyle: IStaticElementStyle
-    border: IBorderElementStyle
+export interface ITooltipColorScheme {
+    primaryText: string,
+    secondaryText: string,
+    background: string
+    border: string
 }

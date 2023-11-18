@@ -1,187 +1,107 @@
-import { ColorWrapper } from './ColorWrapper';
 import { ColorPalette, getPalette } from './ColorPalette';
-import { ICardStyle, IIconButtonStyle, ICardButtonStyle, ITooltipStyle } from './ComponentStyles';
-import { ITextSizeFactors, IRoundedCornerSizes, standardTextSizeFactors, standardRoundedCornerSizes } from './StandardSizeFactors';
-import { IIconStyle } from './ElementStyles';
-import { StoreState } from '../../store/store';
+import { IIconButtonColorScheme, ICardButtonColorScheme, ITooltipColorScheme, ICardColorScheme, IIconCardColorScheme } from './ComponentStyles';
+import { ColorWrapper } from './ColorWrapper';
 
-export interface ISectionStyles {
+export interface ISectionColorScheme {
     navBar: {
-        main: ICardStyle
-        calendarNavigationButton: IIconButtonStyle
-        dateNavigationButton: ICardButtonStyle
-        settingsButton: IIconButtonStyle
+        main: ICardColorScheme
+        calendarNavigationButton: IIconButtonColorScheme
+        dateNavigationButton: ICardButtonColorScheme
+        settingsButton: IIconButtonColorScheme
     },
     calendar: {
-        dateLabels: ICardStyle
-        todayDateLabel: ICardStyle
-        main: ICardStyle
+        dateLabels: ICardColorScheme
+        todayDateLabel: ICardColorScheme
+        addNewExpenseButton: ICardButtonColorScheme
+        expenseCards: ICardColorScheme
+        main: ICardColorScheme
     },
-    modals: {
-        tooltip: ITooltipStyle,
-        loading: IIconStyle
+    other: {
+        tooltip: ITooltipColorScheme,
+        loading: IIconCardColorScheme,
+        modals: IIconButtonColorScheme
     }
 }
 
-export const getSectionStyles = (
-    palette: ColorPalette,
-    textSizeFactors?: ITextSizeFactors,
-    roundedCornerSizes?: IRoundedCornerSizes,
-    navbarIntensity?: number,
-    mainAreaDefaultIntensity?: number,
-    modalIntensity?: number
-) => {
-    const textSizeFactorsFinal = textSizeFactors ?? standardTextSizeFactors
-    const roundedCornerSizesFinal = roundedCornerSizes ?? standardRoundedCornerSizes
-    const navbarIntensityFinal = navbarIntensity ?? 0.8
-    const mainAreaDefaultIntensityFinal = mainAreaDefaultIntensity ?? 0.7
-    const modalIntensityFinal = modalIntensity ?? 0.75
-    const navbarNegativeIntensity = 1 - navbarIntensityFinal
+export const getSectionStyles = (colorPalette: ColorPalette): ISectionColorScheme => {
+    const mainIntensity = 0
+    const contrastIntensity = 1 - mainIntensity
 
-
-    const navBar = {
-        main: {
-            element: {
-                backgroundColor: palette.drawSample(navbarIntensityFinal).toRgba()
-            },
-            text: {
-                bold: false,
-                color: palette.drawSample(navbarNegativeIntensity).toRgba(),
-                size: textSizeFactorsFinal.headerM
-            },
-            border: {
-                borderRadius: 0,
-                thickness: 0,
-                color: ColorWrapper.transparent().toRgba()
-            }
-        },
-        calendarNavigationButton: {
-            icon: {
-                iconColor: palette.drawSample(0).toRgba(),
-                size: textSizeFactorsFinal.bodyM
-            },
-            element: {
-                backgroundColor: palette.drawSample(0).toRgba(),
-                hoverColor: palette.drawSample(0).toRgba(),
-                pressColor: palette.drawSample(0).toRgba(),
-            },
-            border: {
-                borderRadius: roundedCornerSizesFinal.s,
-                thickness: 1,
-                color: palette.drawSample(0).toRgba()
-            }
-        },
-        dateNavigationButton: {
-            textStyle: {
-                bold: false,
-                color: palette.drawSample(navbarNegativeIntensity).toRgba(),
-                size: textSizeFactorsFinal.bodyS
-            },
-            elementStyle: {
-                backgroundColor: palette.drawSample(0).toRgba(),
-            },
-            border: {
-                borderRadius: textSizeFactorsFinal.bodyS,
-                thickness: textSizeFactorsFinal.bodyS,
-                color: palette.drawSample(0).toRgba()
-            }
-        },
-        settingsButton: {
-            icon: {
-                iconColor: palette.drawSample(0).toRgba(),
-                size: textSizeFactorsFinal.bodyS
-            },
-            element: {
-                backgroundColor: palette.drawSample(0).toRgba(),
-                hoverColor: palette.drawSample(0).toRgba(),
-                pressColor: palette.drawSample(0).toRgba(),
-            },
-            border: {
-                borderRadius: textSizeFactorsFinal.bodyS,
-                thickness: textSizeFactorsFinal.bodyS,
-                color: palette.drawSample(0).toRgba()
-            }
-        },
-    }
-
-    const calendar = {
-        dateLabels: {
-            element: {
-                backgroundColor: palette.drawSample(0).toRgba()
-            },
-            text: {
-                bold: false,
-                color: palette.drawSample(0).toRgba(),
-                size: textSizeFactorsFinal.bodyS
-            },
-            border: {
-                borderRadius: textSizeFactorsFinal.bodyS,
-                thickness: textSizeFactorsFinal.bodyS,
-                color: palette.drawSample(0).toRgba()
-            }
-        },
-        todayDateLabel: {
-            element: {
-                backgroundColor: palette.drawSample(0).toRgba()
-            },
-            text: {
-                bold: false,
-                color: palette.drawSample(0).toRgba(),
-                size: textSizeFactorsFinal.bodyS
-            },
-            border: {
-                borderRadius: textSizeFactorsFinal.bodyS,
-                thickness: textSizeFactorsFinal.bodyS,
-                color: palette.drawSample(0).toRgba()
-            }
-        },
-        main: {
-            element: {
-                backgroundColor: palette.drawSample(0).toRgba()
-            },
-            text: {
-                bold: false,
-                color: palette.drawSample(0).toRgba(),
-                size: textSizeFactorsFinal.bodyS
-            },
-            border: {
-                borderRadius: textSizeFactorsFinal.bodyS,
-                thickness: textSizeFactorsFinal.bodyS,
-                color: palette.drawSample(0).toRgba()
-            }
-        },
-    }
-
-    const modals = {
-        tooltip: {
-            primaryTextStyle: {
-                bold: false,
-                color: palette.drawSample(0).toRgba(),
-                size: textSizeFactorsFinal.bodyS
-            },
-            secondaryTextStyle: {
-                bold: false,
-                color: palette.drawSample(0).toRgba(),
-                size: textSizeFactorsFinal.bodyS
-            },
-            border: {
-                borderRadius: textSizeFactorsFinal.bodyS,
-                thickness: textSizeFactorsFinal.bodyS,
-                color: palette.drawSample(0).toRgba()
-            },
-            elementStyle: {
-                backgroundColor: palette.drawSample(0).toRgba()
-            },
-        },
-        loading: {
-            iconColor: palette.drawSample(0).toRgba(),
-            size: textSizeFactorsFinal.bodyS
-        },
-    }
-
+    const accentColor = ColorWrapper.fromRgb(35, 131, 226).toRgba()
     return {
-        navBar: navBar,
-        calendar: calendar,
-        modals: modals
+        navBar: {
+            main: {
+                text: "",
+                background: colorPalette.drawSample(mainIntensity + 0.1).toRgba(),
+                border: ""
+            },
+            calendarNavigationButton: {
+                icon: colorPalette.drawSample(contrastIntensity - 0.4).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.1).toRgba(),
+                press: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
+                hover: colorPalette.drawSample(mainIntensity + 0.15).toRgba()
+            },
+            settingsButton: {
+                icon: colorPalette.drawSample(contrastIntensity - 0.4).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.1).toRgba(),
+                press: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
+                hover: colorPalette.drawSample(mainIntensity + 0.15).toRgba()
+            },
+            dateNavigationButton: {
+                text: colorPalette.drawSample(contrastIntensity - 0.4).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.1).toRgba(),
+                press: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
+                hover: colorPalette.drawSample(mainIntensity + 0.15).toRgba(),
+                border: ColorWrapper.transparent().toRgba()
+            },
+        },
+        calendar: {
+            dateLabels: {
+                text: colorPalette.drawSample(contrastIntensity - 0.4).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.25).toRgba(),
+                border: ColorWrapper.transparent().toRgba()
+            },
+            todayDateLabel: {
+                text: colorPalette.drawSample(contrastIntensity - 0.2).toRgba(),
+                background: accentColor,
+                border: ColorWrapper.transparent().toRgba()
+            },
+            addNewExpenseButton: {
+                text: "",
+                border: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
+                press: colorPalette.drawSample(mainIntensity + 0.14).toRgba(),
+                hover: colorPalette.drawSample(mainIntensity + 0.19).toRgba()
+            },
+            expenseCards: {
+                text: colorPalette.drawSample(contrastIntensity - 0).toRgba(),
+                background: accentColor,
+                border: colorPalette.drawSample(mainIntensity + 0.25).toRgba(),
+            },
+            main: {
+                text: "",
+                background: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
+                border: colorPalette.drawSample(mainIntensity + 0.25).toRgba()
+            },
+        },
+        other: {
+            // TO DO
+            tooltip: {
+                primaryText: colorPalette.drawSample(contrastIntensity).toRgba(),
+                secondaryText: colorPalette.drawSample(contrastIntensity).toRgba(),
+                background: colorPalette.drawSample(contrastIntensity).toRgba(),
+                border: colorPalette.drawSample(contrastIntensity).toRgba()
+            },
+            loading: {
+                icon: colorPalette.drawSample(contrastIntensity - 0.4).toRgba(),
+                background: "",
+            },
+            modals: {
+                icon: colorPalette.drawSample(contrastIntensity - 0.4).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.1).toRgba(),
+                press: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
+                hover: colorPalette.drawSample(mainIntensity + 0.15).toRgba(),
+            }
+        }
     }
 }

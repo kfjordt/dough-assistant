@@ -2,7 +2,9 @@ import {
     LaCogSolid,
     LaCircleNotchSolid,
     LaAngleLeftSolid,
-    LaAngleRightSolid
+    LaAngleRightSolid,
+LaSquare,
+LaCheckSquare
 } from "oh-vue-icons/icons";
 
 import { IconType } from "oh-vue-icons/types/icons";
@@ -11,7 +13,9 @@ export enum Icons {
     LeftArrow,
     RightArrow,
     Gear,
-    Spinner
+    Spinner,
+    CheckedCheckbox,
+    EmptyCheckbox
 }
 
 export const getIconAsStr = (icon: Icons) => {
@@ -24,6 +28,10 @@ export const getIconAsStr = (icon: Icons) => {
             return "la-angle-left-solid"
         case Icons.RightArrow:
             return "la-angle-right-solid"
+        case Icons.CheckedCheckbox:
+            return "la-check-square"
+        case Icons.EmptyCheckbox:
+            return "la-square"
         default:
             throw new Error("Icon: " + icon + " has no corresponing component")
     }
@@ -33,5 +41,7 @@ export const allIcons: IconType[] = [
     LaCogSolid,
     LaCircleNotchSolid,
     LaAngleLeftSolid,
-    LaAngleRightSolid
+    LaAngleRightSolid,
+    LaSquare,
+    LaCheckSquare
 ]

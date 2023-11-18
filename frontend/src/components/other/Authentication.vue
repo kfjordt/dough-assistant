@@ -5,21 +5,16 @@ import { clientSecrets } from '../../ClientSecrets';
 import { ApiService } from '../../api/ApiService';
 import { DateTime } from '../../models/common/DateTime';
 import { setCookie } from 'typescript-cookie'
-import { TokenValidator, TokenValidity, TokenState } from '../../models/common/TokenValidator';
-import { useStore } from '../../store/store';
-import { GoogleApiService } from '../../api/GoogleApiService';
+import { useUserStore } from '../../stores/user';
 
 const stayLoggedIn = ref(false);
 
-const store = useStore()
+const userStore = useUserStore()
 
 const handleAccessToken = (bearerToken: string) => {
-    console.log(bearerToken);
-    const userInfo = GoogleApiService.fetchUserInfo(bearerToken)
-        .then(user => ApiService.requestNewSession(bearerToken, user)
-            .then(res => {  })
-        )
-        .catch(_ => console.log("Failed to fetch user info from Google API"))
+    ApiService.requestNewSession(bearerToken)
+        .then(userId => userStore.setLoggedInUserId(userId))
+        .catch(error => console.error(error))
 }
 
 const promptUserForGoogleLogin = async () => {
