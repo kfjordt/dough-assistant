@@ -18,7 +18,7 @@ const navBarStyle = computed(() => useStyleStore().sectionStyles.navBar)
 .navbar {
     padding: 4px;
     display: flex;
-    height: 30px;
+    height: 40px;
     justify-content: space-between;
 }
 </style>

@@ -6,6 +6,7 @@ export interface ISectionColorScheme {
     navBar: {
         main: ICardColorScheme
         calendarNavigationButton: IIconButtonColorScheme
+        todayButton: ICardButtonColorScheme
         dateNavigationButton: ICardButtonColorScheme
         settingsButton: IIconButtonColorScheme
     },
@@ -32,24 +33,31 @@ export const getSectionStyles = (colorPalette: ColorPalette): ISectionColorSchem
         navBar: {
             main: {
                 text: "",
-                background: colorPalette.drawSample(mainIntensity + 0.1).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.05).toRgba(),
                 border: ""
             },
             calendarNavigationButton: {
                 icon: colorPalette.drawSample(contrastIntensity - 0.4).toRgba(),
-                background: colorPalette.drawSample(mainIntensity + 0.1).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.05).toRgba(),
                 press: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
                 hover: colorPalette.drawSample(mainIntensity + 0.15).toRgba()
             },
+            todayButton: {
+                text: colorPalette.drawSample(contrastIntensity - 0.4).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.05).toRgba(),
+                press: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
+                hover: colorPalette.drawSample(mainIntensity + 0.15).toRgba(),
+                border: ColorWrapper.transparent().toRgba()
+            },
             settingsButton: {
                 icon: colorPalette.drawSample(contrastIntensity - 0.4).toRgba(),
-                background: colorPalette.drawSample(mainIntensity + 0.1).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.05).toRgba(),
                 press: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
                 hover: colorPalette.drawSample(mainIntensity + 0.15).toRgba()
             },
             dateNavigationButton: {
                 text: colorPalette.drawSample(contrastIntensity - 0.4).toRgba(),
-                background: colorPalette.drawSample(mainIntensity + 0.1).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.05).toRgba(),
                 press: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
                 hover: colorPalette.drawSample(mainIntensity + 0.15).toRgba(),
                 border: ColorWrapper.transparent().toRgba()

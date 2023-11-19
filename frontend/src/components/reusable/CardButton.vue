@@ -2,7 +2,8 @@
     <div class="card-button" @click="handleClick" @mouseout="setHovered(false)" @mouseover="setHovered(true)"
         @mousedown="setPressed(true)" @mouseup="setPressed(false)" :style="{
             backgroundColor: cardColor,
-            color: props.style.text
+            color: props.style.text,
+            border: `0.5px solid ${props.style.border}`
         }">
         {{ props.text }}
     </div>
@@ -51,5 +52,7 @@ const handleClick = () => {
     width: 100%;
     border-radius: 4px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 </style>

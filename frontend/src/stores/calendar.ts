@@ -17,6 +17,10 @@ export const useCalendarStore = defineStore('calendar', () => {
         selectedDate.value = DateTime.fromDate(newModel)
     }
 
+    const setSelectedDate = (newDate: DateTime) => {
+        selectedDate.value = newDate
+    }
+
     const daysInCurrentMonth = computed(() => {
         const days = selectedDate.value.getDaysInCurrentMonth()
         return days
@@ -25,6 +29,7 @@ export const useCalendarStore = defineStore('calendar', () => {
     return {
         selectedDate,
         incrementMonth,
+        setSelectedDate,
         decrementMonth,
         daysInCurrentMonth,
     };
