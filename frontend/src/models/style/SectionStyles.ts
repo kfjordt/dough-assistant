@@ -9,8 +9,17 @@ export interface ISectionColorScheme {
         todayButton: ICardButtonColorScheme
         dateNavigationButton: ICardButtonColorScheme
         settingsButton: IIconButtonColorScheme
+        monthNavigatorPanel: ICardColorScheme
+        monthNavigatorButtons: ICardButtonColorScheme
     },
     calendar: {
+        dateLabels: ICardColorScheme
+        todayDateLabel: ICardColorScheme
+        addNewExpenseButton: ICardButtonColorScheme
+        expenseCards: ICardColorScheme
+        main: ICardColorScheme
+    },
+    calendarDarkened: {
         dateLabels: ICardColorScheme
         todayDateLabel: ICardColorScheme
         addNewExpenseButton: ICardButtonColorScheme
@@ -62,6 +71,18 @@ export const getSectionStyles = (colorPalette: ColorPalette): ISectionColorSchem
                 hover: colorPalette.drawSample(mainIntensity + 0.15).toRgba(),
                 border: ColorWrapper.transparent().toRgba()
             },
+            monthNavigatorButtons: {
+                text: colorPalette.drawSample(contrastIntensity - 0.4).toRgba(),
+                border: ColorWrapper.transparent().toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.1).toRgba(),
+                press: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
+                hover: colorPalette.drawSample(mainIntensity + 0.15).toRgba(),
+            },
+            monthNavigatorPanel: {
+                text: "",
+                border: ColorWrapper.transparent().toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.1).toRgba(),
+            }
         },
         calendar: {
             dateLabels: {
@@ -89,6 +110,35 @@ export const getSectionStyles = (colorPalette: ColorPalette): ISectionColorSchem
             main: {
                 text: "",
                 background: colorPalette.drawSample(mainIntensity + 0.12).toRgba(),
+                border: colorPalette.drawSample(mainIntensity + 0.25).toRgba()
+            },
+        },
+        calendarDarkened: {
+            dateLabels: {
+                text: colorPalette.drawSample(contrastIntensity - 0.2).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.15).toRgba(),
+                border: ColorWrapper.transparent().toRgba()
+            },
+            todayDateLabel: {
+                text: colorPalette.drawSample(contrastIntensity - 0.1).toRgba(),
+                background: accentColor,
+                border: ColorWrapper.transparent().toRgba()
+            },
+            addNewExpenseButton: {
+                text: "",
+                border: colorPalette.drawSample(mainIntensity + 0.08).toRgba(),
+                background: colorPalette.drawSample(mainIntensity + 0.08).toRgba(),
+                press: colorPalette.drawSample(mainIntensity + 0.10).toRgba(),
+                hover: colorPalette.drawSample(mainIntensity + 0.15).toRgba()
+            },
+            expenseCards: {
+                text: colorPalette.drawSample(contrastIntensity - 0).toRgba(),
+                background: accentColor,
+                border: colorPalette.drawSample(mainIntensity + 0.25).toRgba(),
+            },
+            main: {
+                text: "",
+                background: colorPalette.drawSample(mainIntensity + 0.8).toRgba(),
                 border: colorPalette.drawSample(mainIntensity + 0.25).toRgba()
             },
         },

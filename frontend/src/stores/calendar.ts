@@ -17,9 +17,25 @@ export const useCalendarStore = defineStore('calendar', () => {
         selectedDate.value = DateTime.fromDate(newModel)
     }
 
+    const setMonthIdx = (idx: number) => {
+        const newModel = selectedDate.value.setMonthOfYear(idx).getModel()
+        newModel.setDate(1)
+        selectedDate.value = DateTime.fromDate(newModel)
+    }
+
+    const setYear = (idx: number) => {
+        const newModel = selectedDate.value.setYear(idx).getModel()
+        newModel.setDate(1)
+        selectedDate.value = DateTime.fromDate(newModel)
+    }
+
     const setSelectedDate = (newDate: DateTime) => {
         selectedDate.value = newDate
     }
+
+    const ongoingYearCollection = computed(() => {
+        return selectedDate.value.getOngoingYearCollection()
+    })
 
     const daysInCurrentMonth = computed(() => {
         const days = selectedDate.value.getDaysInCurrentMonth()
@@ -28,9 +44,12 @@ export const useCalendarStore = defineStore('calendar', () => {
 
     return {
         selectedDate,
-        incrementMonth,
         setSelectedDate,
+        incrementMonth,
         decrementMonth,
+        setMonthIdx,
+        setYear,
         daysInCurrentMonth,
+        ongoingYearCollection
     };
 });
