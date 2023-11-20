@@ -25,6 +25,12 @@ export class ColorWrapper {
         )
     }
 
+    static fromRgbaString(rgbaString: string) {
+        const colorModel = Color({ r: rgbaString[5], g: rgbaString[6], b: rgbaString[7] })
+        colorModel.alpha(rgbaString[8])
+        return new ColorWrapper(colorModel)
+    }
+
     toHex() {
         return this.model.hex()
     }

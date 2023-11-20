@@ -56,6 +56,16 @@ export class DateTime implements ICloneable {
             : this.dateModel.getDay() - 1
     }
 
+    setMonthOfYear = (monthIdx: number) => {
+        this.dateModel.setMonth(monthIdx)
+        return this
+    }
+
+    setYear = (year: number) => {
+        this.dateModel.setFullYear(year)
+        return this
+    }
+
     getMonth() {
         return this.dateModel.getMonth()
     }
@@ -90,6 +100,23 @@ export class DateTime implements ICloneable {
         }
 
         return days
+    }
+
+    getOngoingYearCollection(): number[] {
+        console.log("test");
+        const yearDiff = this.getModel().getFullYear() - 1970
+
+        const currentStep = Math.floor(yearDiff / 16)
+
+        const startYear = 1970 + 16 * currentStep
+        const endYear = 1970 + 16 * (currentStep + 1)
+
+        let years: number[] = []
+        for (let i = startYear; i < endYear; i++) {
+            years.push(i)
+        }
+
+        return years
     }
 
     addDays(amount: number) {

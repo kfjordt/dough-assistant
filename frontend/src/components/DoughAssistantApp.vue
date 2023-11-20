@@ -36,28 +36,6 @@ onMounted(() => {
     font-family: 'Segoe UI', 'Arial Narrow', Arial, sans-serif;
 }
 
-body::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    background-color: #F5F5F5;
-}
-
-body::-webkit-scrollbar {
-    background: transparent;
-}
-
-body::-webkit-scrollbar-track {
-    background: rgba(202, 204, 206, 0.04);
-}
-
-body::-webkit-scrollbar-thumb {
-    background: #474c50;
-}
-
-body::-webkit-scrollbar-thumb:hover {
-    background: rgba(202, 204, 206, 0.3);
-}
-
 .app {
     width: 100vw;
     height: 100vh;
