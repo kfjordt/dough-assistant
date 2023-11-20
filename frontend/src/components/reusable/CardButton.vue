@@ -33,7 +33,6 @@ const cardColor = computed(() => {
 
 const setHovered = (hovered: boolean) => {
     isHovered.value = hovered;
-    // setTooltip(hovered)
 };
 
 const setPressed = (pressed: boolean) => {
@@ -48,11 +47,7 @@ const handleClick = () => {
 
 <style scoped>
 .card-button {
-    height: 100%;
-    width: 100%;
     border-radius: 4px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
 }
 </style>
