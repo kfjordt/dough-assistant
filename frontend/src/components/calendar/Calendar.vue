@@ -28,6 +28,8 @@ onMounted(async () => {
 });
 
 const calendarStore = useCalendarStore()
+
+
 const daysInCurrentMonth = computed(() => {
     return calendarStore.daysInCurrentMonth
 })

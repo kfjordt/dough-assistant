@@ -26,6 +26,7 @@ import { ApiService } from '../../api/ApiService';
 import { useExpensesStore } from '../../stores/expenses';
 import { useStyleStore } from '../../stores/style';
 import ExpenseCard from './ExpenseCard.vue';
+import { useCalendarStore } from '../../stores/calendar';
 
 const props = defineProps({
     day: {
@@ -34,7 +35,14 @@ const props = defineProps({
     },
 })
 
-const style = computed(() => useStyleStore().sectionStyles.calendar)
+const selectedMonth = useCalendarStore().selectedDate.getMonth()
+const isPartOfCurrentMonth = computed(() => {
+    return true
+})
+
+const style = computed(() => isPartOfCurrentMonth.value
+    ? useStyleStore().sectionStyles.calendar
+    : useStyleStore().sectionStyles.calendarDarkened)
 
 const date = computed(() => props.day.getModel().getDate())
 const dateLabelStyle = computed(() => {
@@ -84,6 +92,7 @@ const handleAddExpense = () => {
 
 <style scoped>
 .day {
+    background-color: black;
     display: flex;
     padding: 4px;
 }
