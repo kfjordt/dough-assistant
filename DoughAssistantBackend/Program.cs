@@ -43,6 +43,12 @@ builder.Services.AddScoped(provider =>
     var mapper = provider.GetRequiredService<IMapper>();
     return new GoogleService(mapper);
 });
+builder.Services.AddScoped(provider =>
+{
+    return new CurrencyScraper(
+                "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html#dev",
+                "//*[@id=\"main-wrapper\"]/main/div[3]/div[2]/div/div/table/tbody");
+});
 
 // Database context
 builder.Services.AddDbContext<DataContext>(options =>

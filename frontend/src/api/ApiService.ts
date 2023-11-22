@@ -1,11 +1,12 @@
 import { ApiEndpoints } from './ApiEndpoints';
 import { UserDto } from '../models/dto/UserDto'
 import { ExpenseDto } from '../models/dto/ExpenseDto';
+import { Currency } from '../models/data/Currency';
 
 export class ApiService {
-    static requestNewSession = async (googleAccessToken: string): Promise<UserDto> => {
+    static requestNewSession = async (googleJwt: string): Promise<UserDto> => {
         const urlParams = new URLSearchParams()
-        urlParams.append('googleAccessToken', googleAccessToken)
+        urlParams.append('googleJwt', googleJwt)
 
         const requestNewSessionUrl = ApiEndpoints.SESSIONS + "?" + urlParams.toString()
         const response = await fetch(requestNewSessionUrl, {
@@ -25,7 +26,7 @@ export class ApiService {
             headers: {
                 'Content-Type': 'application/json',
             },
-            credentials: 'include', // Set credentials here
+            credentials: 'include',
             body: JSON.stringify(expense),
         })
 
@@ -36,6 +37,17 @@ export class ApiService {
         const response = await fetch(ApiEndpoints.EXPENSES, {
             credentials: 'include'
         })
+
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        } else {
+            throw new Error(response.statusText)
+        }
+    }
+
+    static getCurrencies = async (): Promise<Currency[]> => {
+        const response = await fetch(ApiEndpoints.CURRENCY)
 
         if (response.ok) {
             const data = await response.json()
