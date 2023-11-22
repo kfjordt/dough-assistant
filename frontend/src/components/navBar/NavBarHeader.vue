@@ -1,9 +1,14 @@
 <template>
     <div class="navbar-header">
+
+        <Dropdown horizontalAlignment="right" @clickOutside="handleCurrencyToggle(false)" :showDropdown="showCurrencyDropdown">
+            <IconButton @click="handleCurrencyToggle(true)" :style="navBarStyle.settingsButton" :icon="Icons.Currency" />
+            <template v-slot:dropdown-content>
+                <CurrencyPanel />
+            </template>
+        </Dropdown>
+
         <IconButton @click="handleSettingsToggle" :style="navBarStyle.settingsButton" :icon="Icons.Gear" />
-        <transition name="fade">
-            <SettingsDialog v-if="showSettings" />
-        </transition>
     </div>
 </template>
 
@@ -12,14 +17,19 @@ import { computed } from '@vue/reactivity';
 import { useStyleStore } from '../../stores/style';
 import { Icons } from '../../models/icons/Icons';
 import IconButton from '../reusable/IconButton.vue';
+import Dropdown from '../reusable/Dropdown.vue';
+import CurrencyPanel from "./CurrencyPanel.vue"
 import { ref } from 'vue';
-import SettingsDialog from "./SettingsDialog.vue"
 
 const navBarStyle = computed(() => useStyleStore().sectionStyles.navBar)
-const showSettings = ref(false)
+
+const showCurrencyDropdown = ref(false)
+const handleCurrencyToggle = (show: boolean) => {
+    showCurrencyDropdown.value = show
+}
+
 
 const handleSettingsToggle = () => {
-    showSettings.value = !showSettings.value
 }
 </script>
 
@@ -27,6 +37,7 @@ const handleSettingsToggle = () => {
 .navbar-header {
     display: flex;
     align-items: center;
+    padding: 4px;
 }
 
 .fade-enter-active,

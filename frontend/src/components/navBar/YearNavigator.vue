@@ -6,7 +6,7 @@
         </div>
         <div class="year-collection">
             <CardButton @click="handleYearClick(years[idx])" class="year-navigator-year-label" v-for="(year, idx) in years"
-                :key="idx" :style="style.monthNavigatorButtons" :text="year" />
+                :key="idx" :style="style.monthNavigatorButtons" :text="year.toString()" />
         </div>
     </div>
 </template>
@@ -44,6 +44,7 @@ const handleYearClick = (year: number) => {
 .year-navigator {
     border-radius: 4px;
     padding: 4px;
+    margin-top: 4px;
 }
 
 .year-collection {

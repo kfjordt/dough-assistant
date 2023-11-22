@@ -3,16 +3,20 @@ import {
     LaCircleNotchSolid,
     LaAngleLeftSolid,
     LaAngleRightSolid,
-LaSquare,
-LaCheckSquare
+    LaSquare,
+    LaCheckSquare,
+    LaEuroSignSolid
 } from "oh-vue-icons/icons";
 
 import { IconType } from "oh-vue-icons/types/icons";
 
+// https://oh-vue-icons.js.org/
+// Under section "Line Awesome"
 export enum Icons {
     LeftArrow,
     RightArrow,
     Gear,
+    Currency,
     Spinner,
     CheckedCheckbox,
     EmptyCheckbox
@@ -32,6 +36,8 @@ export const getIconAsStr = (icon: Icons) => {
             return "la-check-square"
         case Icons.EmptyCheckbox:
             return "la-square"
+        case Icons.Currency:
+            return "la-euro-sign-solid"
         default:
             throw new Error("Icon: " + icon + " has no corresponing component")
     }
@@ -43,5 +49,6 @@ export const allIcons: IconType[] = [
     LaAngleLeftSolid,
     LaAngleRightSolid,
     LaSquare,
-    LaCheckSquare
+    LaCheckSquare,
+    LaEuroSignSolid
 ]

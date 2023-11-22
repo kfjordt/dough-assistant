@@ -11,7 +11,6 @@ import { useStyleStore } from '../../stores/style';
 import { useCalendarStore } from '../../stores/calendar';
 
 const style = useStyleStore().sectionStyles.navBar
-
 const calendarStore = useCalendarStore()
 
 const months = [

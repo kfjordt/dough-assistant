@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="dropdown">
         <slot></slot>
         <transition name="dropdown">
-            <div class="dropdown-content" v-if="showDropdown">
+            <div :style="getAlignment()" class="dropdown-content" v-if="showDropdown">
                 <slot name="dropdown-content"></slot>
             </div>
         </transition>
@@ -16,7 +16,22 @@ const props = defineProps({
     showDropdown: {
         type: Boolean,
     },
+    horizontalAlignment: {
+        type: String
+    }
 });
+
+const getAlignment = () => {
+    if (props.horizontalAlignment == "right") {
+        return {
+            right: 0
+        }
+    } else {
+        return {
+            left: 0
+        }
+    }
+}
 
 const showDropdown = ref(false)
 const isInitialClick = ref(true)
@@ -42,7 +57,7 @@ watch(() => props.showDropdown, (value) => {
     if (value) {
         handleShowDropdown()
     }
-     else {
+    else {
         handleHideDropdown()
     }
 });
@@ -59,9 +74,14 @@ const handleHideDropdown = () => {
 </script>
 
 <style scoped>
+.dropdown {
+    position: relative;
+}
+
 .dropdown-content {
     position: absolute;
 }
+
 
 .dropdown-enter-active,
 .dropdown-leave-active {
