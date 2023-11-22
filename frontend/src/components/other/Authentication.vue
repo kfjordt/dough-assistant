@@ -8,27 +8,14 @@ import { setCookie } from 'typescript-cookie'
 import { useUserStore } from '../../stores/user';
 
 const stayLoggedIn = ref(false);
-
 const userStore = useUserStore()
 
-const handleAccessToken = (bearerToken: string) => {
-    ApiService.requestNewSession(bearerToken)
+const handleGoogleToken = (response: any) => {
+    const token = response.credential as string
+
+    ApiService.requestNewSession(token)
         .then(userId => userStore.setLoggedInUserId(userId))
         .catch(error => console.error(error))
-}
-
-const promptUserForGoogleLogin = async () => {
-    googleSdkLoaded(google => {
-        google.accounts.oauth2.initTokenClient({
-            client_id: clientSecrets.googleClientId,
-            scope: "email profile",
-
-            callback: (response) => {
-                const accessToken = response.access_token;
-                handleAccessToken(accessToken)
-            }
-        }).requestAccessToken()
-    });
 }
 </script>
 
@@ -36,19 +23,15 @@ const promptUserForGoogleLogin = async () => {
     <div class="auth">
         <h1 class="auth-header">Dough Assistant</h1>
         <h2 class="auth-subheader">Blazingly brisk budgeting</h2>
-        <button @click="promptUserForGoogleLogin" class="auth-button">Sign in with Google</button>
-        <div>
-            <input id="stay-logged-in" type="checkbox" v-model="stayLoggedIn">
-            <label for="stay-logged-in">Keep me logged in for 30 days</label>
-        </div>
+        <GoogleLogin class="google-sign-in" :callback="handleGoogleToken"/>
     </div>
 </template>
 
 <style scoped>
 .auth {
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid rgb(125, 125, 125);
+    padding: 30px;
+    color: rgb(210, 210, 210);
+    background-color: rgb(50, 50, 50);
     border-radius: 10px;
     user-select: none;
     display: flex;
@@ -66,8 +49,6 @@ const promptUserForGoogleLogin = async () => {
     font-weight: normal;
 }
 
-.auth-button {
+.google-sign-in {
     margin-top: 30px;
-    cursor: pointer;
-}
-</style>
+}</style>

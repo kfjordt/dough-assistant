@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DoughAssistantBackend.Dto;
+using Google.Apis.Auth;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -19,67 +20,30 @@ namespace DoughAssistantBackend.Services
             _mapper = mapper;
         }
 
-        public async Task<UserDto> VerifyAccessTokenAndGetUser(string accessToken)
+        public async Task<UserDto> VerifyAccessTokenAndGetUser(string googleJwt)
         {
-            var httpClient = new HttpClient();
-
             try
             {
-                var googleTokenInfo = await GetTokenInfo(httpClient, accessToken);
-                var userInfo = await GetUserInfo(httpClient, accessToken);
-
+                var userInfo = await GetUserInfo(googleJwt);
                 return userInfo;
             }
-            catch (Exception ex)
+            catch (InvalidJwtException e)
             {
-                throw new Exception("Error validating access token", ex);
+                throw new Exception("Token is invalid", e);
             }
         }
 
-        private async Task<GoogleTokenInfo> GetTokenInfo(HttpClient client, string token)
+        private async Task<UserDto> GetUserInfo(string googleJwt)
         {
-            var tokenInfoEndpoint = $"{TokenInfoEndpoint}={token}";
-            var response = await client.GetStringAsync(tokenInfoEndpoint);
-
-            JObject tokenInfo = JObject.Parse(response);
-
-            try
+            GoogleJsonWebSignature.Payload payload = await GoogleJsonWebSignature.ValidateAsync(googleJwt);
+            UserDto user = new()
             {
-                GoogleTokenInfo googleTokenInfo = _mapper.Map<GoogleTokenInfo>(tokenInfo);
+                UserId = payload.Subject,
+                Email = payload.Email,
+                Name = payload.Name,
+            };
 
-                if (!googleTokenInfo.IsValid())
-                {
-                    throw new Exception("Token is invalid");
-                }
-
-                return googleTokenInfo;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error parsing Google's API response to token", ex);
-            }
+            return user;
         }
-
-        private async Task<UserDto> GetUserInfo(HttpClient client, string token)
-        {
-            var userInfoEndpoint = $"{UserInfoEndpoint}";
-
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-
-            var userInfoResponse = await client.GetStringAsync(userInfoEndpoint);
-
-            JObject userInfo = JObject.Parse(userInfoResponse);
-
-            try
-            {
-                UserDto userDto = _mapper.Map<UserDto>(userInfo);
-                return userDto;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error parsing Google's API response to user info", ex);
-            }
-        } 
     }
 }

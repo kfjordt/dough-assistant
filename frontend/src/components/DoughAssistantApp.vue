@@ -42,6 +42,7 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: rgb(30, 30, 30);
 }
 
 .app-loading-screen {

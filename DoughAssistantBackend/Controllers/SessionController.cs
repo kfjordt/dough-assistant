@@ -32,12 +32,12 @@ namespace DoughAssistantBackend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> RequestSessionAsync ([FromQuery] string googleAccessToken)
+        public async Task<IActionResult> RequestSessionAsync ([FromQuery] string googleJwt)
         {
             UserDto user;
             try
             {
-                user = await _googleService.VerifyAccessTokenAndGetUser(googleAccessToken);
+                user = await _googleService.VerifyAccessTokenAndGetUser(googleJwt);
             }
             catch
             {

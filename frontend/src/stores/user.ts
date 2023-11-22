@@ -1,8 +1,8 @@
 import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 import { UserDto } from '../models/dto/UserDto';
-export const displayLoginScreen = false;
 
+export const displayLoginScreen = false;
 export const useUserStore = defineStore('user', () => {
     const loggedInUser = ref<UserDto | null>(displayLoginScreen
         ? null
