@@ -1,7 +1,9 @@
 <template>
     <div class="navbar-header">
 
-        <Dropdown horizontalAlignment="right" @clickOutside="handleCurrencyToggle(false)" :showDropdown="showCurrencyDropdown">
+        <Dropdown horizontalAlignment="right" @clickOutside="handleCurrencyToggle(false)"
+            :showDropdown="showCurrencyDropdown">
+
             <IconButton @click="handleCurrencyToggle(true)" :style="navBarStyle.settingsButton" :icon="Icons.Currency" />
             <template v-slot:dropdown-content>
                 <CurrencyPanel />

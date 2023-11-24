@@ -1,16 +1,10 @@
 import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 import { UserDto } from '../models/dto/UserDto';
+import { clientSecrets } from '../ClientSecrets';
 
-export const displayLoginScreen = false;
 export const useUserStore = defineStore('user', () => {
-    const loggedInUser = ref<UserDto | null>(displayLoginScreen
-        ? null
-        : {
-            userId: "111179186858378018776",
-            name: "Kasper Jordt",
-            email: "kfjordt@gmail.com"
-        });
+    const loggedInUser = ref<UserDto | null>(true ? null : clientSecrets.sampleUser);
 
     const setLoggedInUser = (user: UserDto) => {
         loggedInUser.value = user
