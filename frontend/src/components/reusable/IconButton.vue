@@ -42,7 +42,6 @@ const iconTextColor = computed(() => {
 
 const setHovered = (hovered: boolean) => {
     isHovered.value = hovered;
-    // setTooltip(hovered)
 };
 
 const setPressed = (pressed: boolean) => {
@@ -53,27 +52,6 @@ const emit = defineEmits(['click']);
 const handleClick = () => {
     emit('click');
 };
-
-const iconButton = ref<HTMLDivElement | null>(null);
-
-// const store = useStore()
-
-// const setTooltip = (set: boolean) => {
-//     if (set && props.tooltip) {
-//         const clientRect = iconButton.value.getBoundingClientRect()
-//         store.setTooltip(
-//             props.tooltip,
-//             new HtmlBoundingBox(
-//                 new Point(clientRect.x, clientRect.y + clientRect.height),
-//                 clientRect.height,
-//                 clientRect.width
-//             )
-//         )
-//     } else {
-//         store.closeTooltip()
-//     }
-// }
-
 </script>
   
 <style scoped>
