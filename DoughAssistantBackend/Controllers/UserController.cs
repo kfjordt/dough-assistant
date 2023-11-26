@@ -14,14 +14,24 @@ namespace DoughAssistantBackend.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
-        private readonly ISessionRepository _sessionRepository;
+        private readonly IAuthenticationRepository _authenticationRepository;
         private readonly IMapper _mapper;
 
-        public UserController(IUserRepository userRepository, IMapper mapper, ISessionRepository sessionRepository)
+        public UserController(IUserRepository userRepository, IMapper mapper, IAuthenticationRepository authenticationRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
-            _sessionRepository = sessionRepository;
+            _authenticationRepository = authenticationRepository;
         }
+        
+        
+        // post userconfig
+        // get userconfig
+        // update userconfig
+        
+        
+        // post month currency
+        // get month currency
+        // update month currency
     }
 }

@@ -9,5 +9,14 @@ namespace DoughAssistantBackend.Interfaces
         User GetUser(string userId);
         bool UserExists(string userId);
         bool CreateUser(User user);
+        
+        // post userconfig
+        // get userconfig
+        // update userconfig
+        
+        
+        // post month currency
+        // get month currency
+        // update month currency
     }
 }
