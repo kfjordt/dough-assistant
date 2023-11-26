@@ -17,7 +17,7 @@ var backendSecrets = await JsonFileReader.ReadAsync<BackendSecrets>("./Propertie
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
 builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
 
 // Cors
@@ -36,7 +36,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped(provider =>
 {
-    return new SessionService();
+    return new AuthenticationService();
 });
 builder.Services.AddScoped(provider =>
 {

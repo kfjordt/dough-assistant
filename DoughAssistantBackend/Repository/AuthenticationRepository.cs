@@ -1,7 +1,7 @@
 ﻿using DoughAssistantBackend.DataContexts;
+using DoughAssistantBackend.Dto;
 using DoughAssistantBackend.Interfaces;
 using DoughAssistantBackend.Models;
-using DoughAssistantBackend.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoughAssistantBackend.Repository
@@ -16,22 +16,56 @@ namespace DoughAssistantBackend.Repository
             _context = context;
         }
 
-        public bool CreateSession(SessionToken sessionToken)
+        public bool CreateSessionToken(SessionToken sessionToken)
         {
             _context.Add(sessionToken);
             return Save();
         }
 
-        public SessionToken GetSessionByUserId(string userId)
+        public SessionToken? GetSessionTokenByUserId(string userId)
         {
-            return _context.SessionTokens.Where(session => session.UserId == userId).FirstOrDefault();
+            return _context.SessionTokens.FirstOrDefault(session => session.UserId == userId);
         }
 
-        public User GetUser(string sessionKey)
+        public bool CreateRememberMeToken(RememberMeToken token)
+        {
+            _context.Add(token);
+            return Save();
+        }
+
+        public RememberMeToken? GetRememberMeTokenById(string rememberMeTokenId)
+        {
+            return _context.RememberMeTokens
+                .FirstOrDefault(token => token.RememberBeTokenId == rememberMeTokenId);
+        }
+
+        public bool RememberMeTokenExists(string rememberMeTokenDtoId)
+        {
+            return _context.RememberMeTokens.Any(token => token.RememberBeTokenId == rememberMeTokenDtoId);
+        }
+
+        public bool UpdateToken(RememberMeToken newToken)
+        {
+            _context.Update(newToken);
+            return Save();
+        }
+
+        public bool DeleteSessionsByUserId(string userId)
+        {
+            List<SessionToken> sessions = _context.SessionTokens
+                .Where(token => token.UserId == userId)
+                .ToList();
+
+            _context.Remove(sessions);
+            return Save();
+        }
+
+        public User? GetUserBySessionId(string sessionKey)
         {
             return _context.SessionTokens
                 .Include(s => s.User) 
-                .FirstOrDefault(s => s.SessionKey == sessionKey).User;
+                .FirstOrDefault(s => s.SessionKey == sessionKey)
+                ?.User;
         }
 
         public bool Save()

@@ -14,25 +14,28 @@ namespace DoughAssistantBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SessionController : Controller
+    public class AuthenticationController : Controller
     {
-        private readonly ISessionRepository _sessionRepository;
+        private readonly IAuthenticationRepository _authenticationRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly AuthenticationService _authenticationService;
         private readonly GoogleService _googleService;
 
-        public SessionController(ISessionRepository sessionRepository, IUserRepository userRepository, AuthenticationService authenticationService, IMapper mapper, GoogleService googleService)
+        public AuthenticationController(IAuthenticationRepository authenticationRepository,
+            IUserRepository userRepository, AuthenticationService authenticationService, IMapper mapper,
+            GoogleService googleService)
         {
-            _sessionRepository = sessionRepository;
+            _authenticationRepository = authenticationRepository;
             _userRepository = userRepository;
             _authenticationService = authenticationService;
             _mapper = mapper;
             _googleService = googleService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> RequestSessionAsync ([FromQuery] string googleJwt)
+        [HttpPost("SessionCookie")]
+
+        public async Task<IActionResult> RequestSessionAsync([FromQuery] string googleJwt)
         {
             UserDto user;
             try
@@ -50,14 +53,14 @@ namespace DoughAssistantBackend.Controllers
                 _userRepository.CreateUser(newUser);
             }
 
-            bool userAlreadyHasSession = _sessionRepository.UserHasSession(user.UserId);
+            bool userAlreadyHasSession = _authenticationRepository.UserHasSession(user.UserId);
 
             string sessionKey;
             if (!userAlreadyHasSession)
             {
                 SessionToken sessionToken = _authenticationService.GenerateNewSession(user.UserId);
 
-                if (!_sessionRepository.CreateSession(sessionToken))
+                if (!_authenticationRepository.CreateSessionToken(sessionToken))
                 {
                     ModelState.AddModelError("", "Something went wrong while saving session");
                     return StatusCode(500, ModelState);
@@ -67,7 +70,7 @@ namespace DoughAssistantBackend.Controllers
             }
             else
             {
-                sessionKey = _sessionRepository.GetSessionByUserId(user.UserId).SessionKey;
+                sessionKey = _authenticationRepository.GetSessionTokenByUserId(user.UserId).SessionKey;
             }
 
             Response.Cookies.Append("SessionKey", sessionKey, new CookieOptions
@@ -80,16 +83,38 @@ namespace DoughAssistantBackend.Controllers
             return Ok(user.UserId);
         }
 
-        [HttpGet]
+        [HttpPost("RememberMeCookie")]
         public IActionResult RequestRememberMeToken(string userId)
         {
-            _authenticationService.
+            RememberMeToken rememberMeToken = _authenticationService.GenerateNewRememberMeToken(userId);
+            _authenticationRepository.CreateRememberMeToken(rememberMeToken);
+
+            return Ok(rememberMeToken);
         }
 
-        [HttpGet]
-        public IActionResult IsTokenValid([FromBody] RememberMeTokenDto rememberMeTokenDto)
+        [HttpPost("RememberMeCookieValidation")]
+        public IActionResult ValidateToken([FromBody] RememberMeTokenDto rememberMeTokenDto)
         {
-            
+            RememberMeToken? rememberMeToken =
+                _authenticationRepository.GetRememberMeTokenById(rememberMeTokenDto.RememberMeTokenId);
+
+            if (rememberMeToken == null)
+            {
+                return BadRequest("Token does not exist.");
+            }
+
+            bool isTokenValid = _authenticationService.ValidateToken(rememberMeTokenDto, rememberMeToken);
+            if (!isTokenValid)
+            {
+                // Theft assumed
+                _authenticationRepository.DeleteSessionsByUserId(rememberMeToken.UserId);
+                return BadRequest(ModelState);
+            }
+
+            RememberMeToken renewedToken = _authenticationService.RenewToken(rememberMeToken);
+            _authenticationRepository.UpdateToken(renewedToken);
+
+            return Ok(renewedToken);
         }
     }
 }

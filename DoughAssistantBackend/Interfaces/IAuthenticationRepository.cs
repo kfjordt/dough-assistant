@@ -1,13 +1,20 @@
-﻿using DoughAssistantBackend.Models;
+﻿using DoughAssistantBackend.Dto;
+using DoughAssistantBackend.Migrations;
+using DoughAssistantBackend.Models;
 
 namespace DoughAssistantBackend.Interfaces
 {
-    public interface ISessionRepository : IRepository
+    public interface IAuthenticationRepository : IRepository
     {
-        bool CreateSession(SessionToken sessionToken);
-        User GetUser(string sessionId);
+        bool CreateSessionToken(SessionToken sessionToken);
+        User? GetUserBySessionId(string sessionId);
         bool SessionExists(string sessionKey);
         bool UserHasSession(string userId);
-        SessionToken GetSessionByUserId(string userId); 
+        SessionToken? GetSessionTokenByUserId(string userId);
+        bool CreateRememberMeToken(RememberMeToken token);
+        RememberMeToken? GetRememberMeTokenById(string rememberMeTokenId);
+        bool RememberMeTokenExists(string rememberMeTokenDtoId);
+        bool UpdateToken(RememberMeToken newToken);
+        bool DeleteSessionsByUserId(string userId);
     }
 }
