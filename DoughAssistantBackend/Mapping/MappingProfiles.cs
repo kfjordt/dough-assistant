@@ -3,7 +3,7 @@ using DoughAssistantBackend.Dto;
 using DoughAssistantBackend.Models;
 using Newtonsoft.Json.Linq;
 
-namespace DoughAssistantBackend.Helper
+namespace DoughAssistantBackend.Mapping
 {
     public class MappingProfiles : Profile
     {
@@ -11,12 +11,15 @@ namespace DoughAssistantBackend.Helper
         {
             CreateMap<Expense, ExpenseDto>();
             CreateMap<ExpenseDto, Expense>();
-
+            
+            CreateMap<RememberMeToken, RememberMeTokenDto>();
+            CreateMap<RememberMeTokenDto, RememberMeToken>();
+            
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>()
                 .AfterMap((src, dest) => dest.RegistrationDate = DateTime.Now); 
 
-            CreateMap<JToken, GoogleTokenInfo>()
+            CreateMap<JToken, GoogleTokenInfoDto>()
                 .ForMember(dest => dest.Azp, opt => opt.MapFrom(src => src["azp"].ToString()))
                 .ForMember(dest => dest.Aud, opt => opt.MapFrom(src => src["aud"].ToString()))
                 .ForMember(dest => dest.Sub, opt => opt.MapFrom(src => src["sub"].ToString()))
@@ -31,7 +34,7 @@ namespace DoughAssistantBackend.Helper
                     .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src["sub"].ToString()))
                     .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src["name"].ToString()))
                     .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src["email"].ToString()));
-
+        
         }
     }
 }

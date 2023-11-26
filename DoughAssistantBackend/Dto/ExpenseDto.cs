@@ -9,5 +9,6 @@ namespace DoughAssistantBackend.Dto
         public string Name { get; set; }
         public double Amount { get; set; }
         public DateTime Time {  get; set; }
+        public string CurrencyCode { get; set; }
     }
 }

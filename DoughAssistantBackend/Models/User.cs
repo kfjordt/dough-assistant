@@ -11,6 +11,9 @@ namespace DoughAssistantBackend.Models
         public string Email { get; set; }
         public DateTime RegistrationDate { get; set; }
         public List<Expense> Expenses { get; set; }
-        public Session? Session { get; set; }
+        public SessionToken SessionToken { get; set; }
+        public RememberMeToken RememberMeToken { get; set; }
+        public List<MonthCurrency> MonthCurrencies { get; set; }
+        public UserConfiguration UserConfiguration { get; set; }
     }
 }

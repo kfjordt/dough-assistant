@@ -13,11 +13,11 @@ public class SessionMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, ISessionRepository sessionRepository)
+    public async Task InvokeAsync(HttpContext context, IAuthenticationRepository authenticationRepository)
     {
         var sessionKey = context.Request.Cookies["SessionKey"];
 
-        if (string.IsNullOrEmpty(sessionKey) || !sessionRepository.SessionExists(sessionKey))
+        if (string.IsNullOrEmpty(sessionKey) || !authenticationRepository.SessionExists(sessionKey))
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
             await context.Response.WriteAsync("No session found with session key");
