@@ -49,26 +49,20 @@ namespace DoughAssistantBackend.Services
                 HtmlNodeCollection cellNodes = rowNode.SelectNodes("td");
 
                 HtmlNode codeNode = cellNodes[0];
-                string? currencyCode = TryParseCodeNode(codeNode);
+                string currencyCode = TryParseCodeNode(codeNode);
 
                 HtmlNode labelNode = cellNodes[1];
-                string? currencyLabel = TryParseLabelNode(labelNode);
+                string currencyLabel = TryParseLabelNode(labelNode);
 
-                HtmlNode trendRateNode = cellNodes[2];
-
-                HtmlNode rateNode = trendRateNode.SelectSingleNode(".//span[@class='rate']");
-                float? currencyRate = TryParseRateNode(rateNode);
-
-                HtmlNode? trendNode = trendRateNode.ChildNodes
-                    .Where(childNode => childNode.Attributes.Any(attribute => attribute.Value.Contains("trend")))
-                    .FirstOrDefault();
-
-                Trend? currencyTrend = null;
-                if (trendNode != null)
-                {
-                    currencyTrend = TryParseTrendNode(trendNode);
-                }
-
+                HtmlNode rateNode = cellNodes[2].SelectSingleNode(".//span[@class='rate']");
+                float? currencyRate = ParseRateNode(rateNode);
+                
+                HtmlNode? trendNode = cellNodes[2].ChildNodes
+                    .FirstOrDefault(childNode =>
+                        childNode.Attributes.Any(attribute => attribute.Value.Contains("trend")));
+                
+                Trend? currencyTrend = ParseTrendNode(trendNode);
+                
                 Currency currency = new Currency()
                 {
                     CurrencyCode = currencyCode,
@@ -83,19 +77,19 @@ namespace DoughAssistantBackend.Services
             return currencies;
         }
 
-        private static string? TryParseCodeNode(HtmlNode codeNode)
+        private static string TryParseCodeNode(HtmlNode codeNode)
         {
             return codeNode.InnerText;
         }
 
-        private static string? TryParseLabelNode(HtmlNode labelNode)
+        private static string TryParseLabelNode(HtmlNode labelNode)
         {
             return labelNode.InnerText;
         }
 
-        private static Trend? TryParseTrendNode(HtmlNode trendNode)
+        private static Trend? ParseTrendNode(HtmlNode? trendNode)
         {
-            HtmlAttribute? classAttributeLookup = trendNode.Attributes
+            HtmlAttribute? classAttributeLookup = trendNode?.Attributes
                 .FirstOrDefault(attribute => attribute.Name == "class");
 
             if (classAttributeLookup == null)
@@ -105,26 +99,26 @@ namespace DoughAssistantBackend.Services
 
             string[] trendTokens = classAttributeLookup.Value.Split(" ");
 
-            return trendTokens[1] == "up"
-            ? Trend.Up
-            : trendTokens[1] == "eq"
-                        ? Trend.None
-                        : Trend.Down;
+            return trendTokens[1] switch
+            {
+                "up" => Trend.Up,
+                "down" => Trend.Down,
+                "eq" => Trend.None,
+                _ => null
+            };
         }
 
-        private static float? TryParseRateNode(HtmlNode rateNode)
+        private static float? ParseRateNode(HtmlNode rateNode)
         {
-            float result;
-            bool parseAttempt = float.TryParse(rateNode.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out result);
+            bool isParsed = float.TryParse(rateNode.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture,
+                out var result);
 
-            if (parseAttempt)
+            if (isParsed)
             {
                 return result;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
     }
 }
