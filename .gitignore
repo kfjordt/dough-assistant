@@ -5,5 +5,4 @@ DoughAssistantBackend/bin/
 DoughAssistantBackend/.vs/
 frontend/src/clientSecrets.ts
 DoughAssistantBackend/Properties/backendSecrets.json
-
 DoughAssistantBackend/.idea/
