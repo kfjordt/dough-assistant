@@ -6,30 +6,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DoughAssistantBackend.Repository
 {
-    public class SessionRepository : ISessionRepository
+    public class AuthenticationRepository : IAuthenticationRepository
     {
 
         private readonly DataContext _context;
 
-        public SessionRepository(DataContext context)
+        public AuthenticationRepository(DataContext context)
         {
             _context = context;
         }
 
-        public bool CreateSession(Session session)
+        public bool CreateSession(SessionToken sessionToken)
         {
-            _context.Add(session);
+            _context.Add(sessionToken);
             return Save();
         }
 
-        public Session GetSessionByUserId(string userId)
+        public SessionToken GetSessionByUserId(string userId)
         {
-            return _context.Sessions.Where(session => session.UserId == userId).FirstOrDefault();
+            return _context.SessionTokens.Where(session => session.UserId == userId).FirstOrDefault();
         }
 
         public User GetUser(string sessionKey)
         {
-            return _context.Sessions
+            return _context.SessionTokens
                 .Include(s => s.User) 
                 .FirstOrDefault(s => s.SessionKey == sessionKey).User;
         }
@@ -42,12 +42,12 @@ namespace DoughAssistantBackend.Repository
 
         public bool SessionExists(string sessionKey)
         {
-            return _context.Sessions.Any(session => session.SessionKey == sessionKey);
+            return _context.SessionTokens.Any(session => session.SessionKey == sessionKey);
         }
 
         public bool UserHasSession(string userId)
         {
-            return _context.Sessions.Any(session => session.UserId == userId);
+            return _context.SessionTokens.Any(session => session.UserId == userId);
         }
     }
 }

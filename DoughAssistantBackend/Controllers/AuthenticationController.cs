@@ -19,14 +19,14 @@ namespace DoughAssistantBackend.Controllers
         private readonly ISessionRepository _sessionRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        private readonly SessionService _sessionService;
+        private readonly AuthenticationService _authenticationService;
         private readonly GoogleService _googleService;
 
-        public SessionController(ISessionRepository sessionRepository, IUserRepository userRepository, SessionService sessionService, IMapper mapper, GoogleService googleService)
+        public SessionController(ISessionRepository sessionRepository, IUserRepository userRepository, AuthenticationService authenticationService, IMapper mapper, GoogleService googleService)
         {
             _sessionRepository = sessionRepository;
             _userRepository = userRepository;
-            _sessionService = sessionService;
+            _authenticationService = authenticationService;
             _mapper = mapper;
             _googleService = googleService;
         }
@@ -55,15 +55,15 @@ namespace DoughAssistantBackend.Controllers
             string sessionKey;
             if (!userAlreadyHasSession)
             {
-                Session session = _sessionService.GenerateNewSession(user.UserId);
+                SessionToken sessionToken = _authenticationService.GenerateNewSession(user.UserId);
 
-                if (!_sessionRepository.CreateSession(session))
+                if (!_sessionRepository.CreateSession(sessionToken))
                 {
                     ModelState.AddModelError("", "Something went wrong while saving session");
                     return StatusCode(500, ModelState);
                 }
 
-                sessionKey = session.SessionKey;
+                sessionKey = sessionToken.SessionKey;
             }
             else
             {
@@ -78,6 +78,18 @@ namespace DoughAssistantBackend.Controllers
             });
 
             return Ok(user.UserId);
+        }
+
+        [HttpGet]
+        public IActionResult RequestRememberMeToken(string userId)
+        {
+            _authenticationService.
+        }
+
+        [HttpGet]
+        public IActionResult IsTokenValid([FromBody] RememberMeTokenDto rememberMeTokenDto)
+        {
+            
         }
     }
 }
