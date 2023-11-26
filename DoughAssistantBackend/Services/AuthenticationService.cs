@@ -1,10 +1,15 @@
-﻿using DoughAssistantBackend.Models;
+﻿using System.Security.Cryptography;
+using System.Text;
+using DoughAssistantBackend.Dto;
+using DoughAssistantBackend.Models;
 
 namespace DoughAssistantBackend.Services
 {
     public class AuthenticationService
     {
-        public AuthenticationService() { }
+        public AuthenticationService()
+        {
+        }
 
         public SessionToken GenerateNewSession(string userId)
         {
@@ -16,9 +21,53 @@ namespace DoughAssistantBackend.Services
 
             return session;
         }
-        
-        
-        // Request new token (upon initial login with 'remember me' enabled)
-        // Is token valid (upon login)
+
+
+        public RememberMeToken GenerateNewRememberMeToken(string userId)
+        {
+            string seriesIdentifier = GenerateRandomNumber(128);
+            string token = GenerateRandomNumber(128);
+            string hashedToken = HashWithSha256(token);
+
+            RememberMeToken rememberMeToken = new RememberMeToken
+            {
+                RememberBeTokenId = seriesIdentifier,
+                Token = token,
+                HashedToken = hashedToken,
+                UserId = userId,
+            };
+
+            return rememberMeToken;
+        }
+
+        public bool ValidateToken(RememberMeTokenDto token, RememberMeToken tokenFromDb)
+        {
+            return tokenFromDb.HashedToken == HashWithSha256(token.Token);
+        }
+
+        public RememberMeToken RenewToken(RememberMeToken oldToken)
+        {
+            string newToken = GenerateRandomNumber(128);
+            return new RememberMeToken
+            {
+                RememberBeTokenId = oldToken.RememberBeTokenId,
+                Token = newToken,
+                HashedToken = HashWithSha256(newToken),
+                UserId = oldToken.UserId,
+            };
+        }
+
+        private static string GenerateRandomNumber(int bits)
+        {
+            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(bits / 8));
+        }
+
+        private static string HashWithSha256(string input)
+        {
+            // Taken from https://stackoverflow.com/a/73126261/19391732
+            var inputBytes = Encoding.UTF8.GetBytes(input);
+            var inputHash = SHA256.HashData(inputBytes);
+            return Convert.ToHexString(inputHash);
+        }
     }
 }
