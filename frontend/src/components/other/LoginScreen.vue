@@ -2,15 +2,22 @@
 import { ApiService } from '../../api/ApiService';
 import { useUserStore } from '../../stores/user';
 import { useRouter } from 'vue-router'
+import { ref } from 'vue';
 
 const userStore = useUserStore()
 const router = useRouter()
 
+const rememberMe = ref(false)
+
 const handleGoogleToken = (response: any) => {
     const token = response.credential as string
 
-    ApiService.requestNewSession(token)
+    ApiService.requestSessionCookie(token)
         .then(userId => {
+            if (rememberMe.value) {
+                ApiService.requestRememberMeCookie(userId)
+            }
+
             userStore.setLoggedInUserId(userId)
             router.push("main")
         })
@@ -28,6 +35,10 @@ const handleSubheaderClick = () => {
             <h1 class="auth-header">Dough Assistant</h1>
             <h2 @click="handleSubheaderClick()" class="auth-subheader">Blazingly brisk budgeting</h2>
             <GoogleLogin class="google-sign-in" :callback="handleGoogleToken" />
+            <div class="remember-me-container">
+                <input v-model="rememberMe" id="remember-me-checkbox" type="checkbox" />
+                <label for="remember-me-checkbox">Remember me</label>
+            </div>
         </div>
     </div>
 </template>
@@ -42,7 +53,7 @@ const handleSubheaderClick = () => {
 
 .login {
     border-radius: 10px;
-    padding: 30px;
+    padding: 28px;
     user-select: none;
     display: flex;
     flex-direction: column;
@@ -54,7 +65,7 @@ const handleSubheaderClick = () => {
 .auth-header,
 .auth-subheader {
     margin: 0;
-    padding: 5px
+    padding: 4px
 }
 
 .auth-subheader {
@@ -63,5 +74,11 @@ const handleSubheaderClick = () => {
 
 .google-sign-in {
     margin-top: 30px;
+}
+
+.remember-me-container {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
 }
 </style>

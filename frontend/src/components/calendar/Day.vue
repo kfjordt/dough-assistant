@@ -1,19 +1,10 @@
 <template>
     <div class="day">
-        <div :style="{ backgroundColor: addNewExpenseBgColor }" class="day-operations" @mouseout="setHovered(false)"
-            @mouseover="setHovered(true)" @mousedown="setPressed(true)" @mouseup="setPressed(false)">
-            <div class="day-operations-header">
-                <div :style="{
-                    backgroundColor: dateLabelStyle.background,
-                    color: dateLabelStyle.text
-                }" class="date-label-container">
-                    {{ date }}
-                </div>
-            </div>
-            <div class="expense-card-container">
-                <ExpenseCard v-for="(expense, idx) in eligibleExpenses" :amount="expense.amount" :name="expense.name"
-                    :key="idx" />
-            </div>
+        <div class="add-expense-container">
+
+        </div>
+        <div>
+            <span class="datelabel"> {{ props.day.getModel().getDate() }} </span>
         </div>
     </div>
 </template>
@@ -40,36 +31,14 @@ const isPartOfCurrentMonth = computed(() => {
     return true
 })
 
-const style = computed(() => isPartOfCurrentMonth.value
-    ? useStyleStore().sectionStyles.calendar
-    : useStyleStore().sectionStyles.calendarDarkened)
+const style = useStyleStore().sectionStyles.calendar
 
 const date = computed(() => props.day.getModel().getDate())
 const dateLabelStyle = computed(() => {
     return DateTime.fromNow().sameDayAs(props.day)
-        ? style.value.todayDateLabel
-        : style.value.dateLabels
+        ? style.todayDateLabel
+        : style.dateLabels
 })
-
-const isHovered = ref(false);
-const isPressed = ref(false);
-
-const addNewExpenseBgColor = computed(() => {
-    return isPressed.value
-        ? style.value.addNewExpenseButton.press
-        : isHovered.value
-            ? style.value.addNewExpenseButton.hover
-            : style.value.addNewExpenseButton.background
-})
-
-const setPressed = (pressed: boolean) => {
-    isPressed.value = pressed;
-};
-
-
-const setHovered = (hovered: boolean) => {
-    isHovered.value = hovered;
-};
 
 const expensesStore = useExpensesStore()
 const availableExpenses = computed(() => expensesStore.expenses)
@@ -93,38 +62,11 @@ const handleAddExpense = () => {
 
 <style scoped>
 .day {
-    background-color: black;
     display: flex;
-    padding: 4px;
+    position: relative;
 }
 
-.day-operations {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.day-operations-header {
-    display: flex;
-    flex-direction: row;
-    margin: 4px;
-    justify-content: space-between;
-}
-
-.expense-card-container {
-    flex-grow: 1;
-    height: 1px;
-    align-items: center;
-
-    display: flex;
-    padding: 4px;
-    flex-direction: column-reverse;
-}
-
-.date-label-container {
+.datelabel {
     aspect-ratio: 1 / 1;
     border-radius: 4px;
     padding: 4px;
@@ -133,5 +75,26 @@ const handleAddExpense = () => {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    color: white;
+    background-color: rgb(50, 50, 50);
+    z-index: 100;
+}
+
+.add-expense-container {
+    background-color: rgb(0, 0, 0);
+    position: absolute;
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    border-radius: 4px;
+    margin: 4px;
+}
+
+.add-expense-container:hover {
+    background-color: rgb(20, 20, 20);
+}
+
+.add-expense-container:active {
+    background-color: rgb(40, 40, 40);
 }
 </style>

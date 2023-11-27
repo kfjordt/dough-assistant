@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import {  onMounted } from 'vue';
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
+import { ApiService } from '../api/ApiService';
 
 const router = useRouter()
-const loggedInUserId = useUserStore().loggedInUserId
+const userStore = useUserStore()
 
 onMounted(() => {
-    const isUserLoggedIn = loggedInUserId != null
-    router.push(
-        isUserLoggedIn
-            ? "main"
-            : "login"
-    )
+    const userHasValidRememberMeCookie = false // Check if remember me cookie is valid in the backend
+    if (userHasValidRememberMeCookie) {
+        router.push("main")
+        return
+    }
+
+    router.push("login")
 })
 
 </script>
