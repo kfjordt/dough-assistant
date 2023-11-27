@@ -4,14 +4,14 @@ import { UserDto } from '../models/dto/UserDto';
 import { clientSecrets } from '../ClientSecrets';
 
 export const useUserStore = defineStore('user', () => {
-    const loggedInUser = ref<UserDto | null>(true ? null : clientSecrets.sampleUser);
+    const loggedInUserId = ref<string | null>(true ? null : clientSecrets.sampleUserId);
 
-    const setLoggedInUser = (user: UserDto) => {
-        loggedInUser.value = user
+    const setLoggedInUserId = (userId: string) => {
+        loggedInUserId.value = userId
     }
 
     return {
-        loggedInUserId: loggedInUser,
-        setLoggedInUserId: setLoggedInUser
+        loggedInUserId,
+        setLoggedInUserId
     };
 });
