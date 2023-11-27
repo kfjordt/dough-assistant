@@ -34,7 +34,6 @@ namespace DoughAssistantBackend.Controllers
         }
 
         [HttpPost("SessionCookie")]
-
         public async Task<IActionResult> RequestSessionAsync([FromQuery] string googleJwt)
         {
             UserDto user;
@@ -50,36 +49,36 @@ namespace DoughAssistantBackend.Controllers
             if (!_userRepository.UserExists(user.UserId))
             {
                 var newUser = _mapper.Map<User>(user);
-                _userRepository.CreateUser(newUser);
+                var userCreated = _userRepository.CreateUser(newUser);
             }
-
+            
             bool userAlreadyHasSession = _authenticationRepository.UserHasSession(user.UserId);
-
+            
             string sessionKey;
             if (!userAlreadyHasSession)
             {
                 SessionToken sessionToken = _authenticationService.GenerateNewSession(user.UserId);
-
+            
                 if (!_authenticationRepository.CreateSessionToken(sessionToken))
                 {
                     ModelState.AddModelError("", "Something went wrong while saving session");
                     return StatusCode(500, ModelState);
                 }
-
+            
                 sessionKey = sessionToken.SessionKey;
             }
             else
             {
                 sessionKey = _authenticationRepository.GetSessionTokenByUserId(user.UserId).SessionKey;
             }
-
+            
             Response.Cookies.Append("SessionKey", sessionKey, new CookieOptions
             {
                 Secure = true,
                 HttpOnly = true,
                 SameSite = SameSiteMode.None
             });
-
+            
             return Ok(user.UserId);
         }
 
@@ -89,7 +88,18 @@ namespace DoughAssistantBackend.Controllers
             RememberMeToken rememberMeToken = _authenticationService.GenerateNewRememberMeToken(userId);
             _authenticationRepository.CreateRememberMeToken(rememberMeToken);
 
-            return Ok(rememberMeToken);
+            var cookieOptions = new CookieOptions
+            {
+                Secure = true,
+                HttpOnly = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTimeOffset.Now.AddDays(30)
+            };
+            
+            Response.Cookies.Append("RememberMeId", rememberMeToken.RememberMeTokenId, cookieOptions);
+            Response.Cookies.Append("RememberMeToken", rememberMeToken.Token, cookieOptions);
+            
+            return Ok();
         }
 
         [HttpPost("RememberMeCookieValidation")]
@@ -114,7 +124,18 @@ namespace DoughAssistantBackend.Controllers
             RememberMeToken renewedToken = _authenticationService.RenewToken(rememberMeToken);
             _authenticationRepository.UpdateToken(renewedToken);
 
-            return Ok(renewedToken);
+            var cookieOptions = new CookieOptions
+            {
+                Secure = true,
+                HttpOnly = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTimeOffset.Now.AddDays(30)
+            };
+            
+            Response.Cookies.Append("RememberMeId", renewedToken.RememberMeTokenId, cookieOptions);
+            Response.Cookies.Append("RememberMeToken", renewedToken.Token, cookieOptions);
+            
+            return Ok();
         }
     }
 }

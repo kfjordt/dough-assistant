@@ -31,7 +31,7 @@ namespace DoughAssistantBackend.Services
 
             RememberMeToken rememberMeToken = new RememberMeToken
             {
-                RememberBeTokenId = seriesIdentifier,
+                RememberMeTokenId = seriesIdentifier,
                 Token = token,
                 HashedToken = hashedToken,
                 UserId = userId,
@@ -50,7 +50,7 @@ namespace DoughAssistantBackend.Services
             string newToken = GenerateRandomNumber(128);
             return new RememberMeToken
             {
-                RememberBeTokenId = oldToken.RememberBeTokenId,
+                RememberMeTokenId = oldToken.RememberMeTokenId,
                 Token = newToken,
                 HashedToken = HashWithSha256(newToken),
                 UserId = oldToken.UserId,

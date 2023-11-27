@@ -36,12 +36,12 @@ namespace DoughAssistantBackend.Repository
         public RememberMeToken? GetRememberMeTokenById(string rememberMeTokenId)
         {
             return _context.RememberMeTokens
-                .FirstOrDefault(token => token.RememberBeTokenId == rememberMeTokenId);
+                .FirstOrDefault(token => token.RememberMeTokenId == rememberMeTokenId);
         }
 
         public bool RememberMeTokenExists(string rememberMeTokenDtoId)
         {
-            return _context.RememberMeTokens.Any(token => token.RememberBeTokenId == rememberMeTokenDtoId);
+            return _context.RememberMeTokens.Any(token => token.RememberMeTokenId == rememberMeTokenDtoId);
         }
 
         public bool UpdateToken(RememberMeToken newToken)

@@ -17,7 +17,7 @@ namespace DoughAssistantBackend.Mapping
             
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>()
-                .AfterMap((src, dest) => dest.RegistrationDate = DateTime.Now); 
+                .AfterMap((src, dest) => dest.RegistrationDate = DateTime.UtcNow); 
 
             CreateMap<JToken, GoogleTokenInfoDto>()
                 .ForMember(dest => dest.Azp, opt => opt.MapFrom(src => src["azp"].ToString()))

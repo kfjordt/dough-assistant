@@ -13,7 +13,7 @@ namespace DoughAssistantBackend.Repository
         {
             _context = context;
         }
-        
+
         public bool CreateUser(User user)
         {
             _context.Add(user);
@@ -49,6 +49,5 @@ namespace DoughAssistantBackend.Repository
             var saved = _context.SaveChanges();
             return saved > 0;
         }
-
     }
 }

@@ -1,5 +1,4 @@
 ﻿using DoughAssistantBackend.Dto;
-using DoughAssistantBackend.Migrations;
 using DoughAssistantBackend.Models;
 
 namespace DoughAssistantBackend.Interfaces

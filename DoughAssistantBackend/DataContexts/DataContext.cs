@@ -25,27 +25,27 @@ namespace DoughAssistantBackend.DataContexts
                .HasForeignKey<SessionToken>(s => s.UserId)
                .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.RememberMeToken)
+                .WithOne(r => r.User)
+                .HasForeignKey<RememberMeToken>(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
             modelBuilder.Entity<Expense>()
                 .HasOne(e => e.User)
                 .WithMany(u => u.Expenses)
                 .HasForeignKey(e => e.UserId) 
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.RememberMeToken)
-                .WithOne(r => r.User)
-                .HasForeignKey<RememberMeToken>(r => r.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.UserConfiguration)
-                .WithOne(uc => uc.User)
-                .HasForeignKey<UserConfiguration>(uc => uc.UserId);
-
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.MonthCurrencies)
-                .WithOne(m => m.User)
-                .HasForeignKey(m => m.UserId);
+            // modelBuilder.Entity<User>()
+            //     .HasOne(u => u.UserConfiguration)
+            //     .WithOne(uc => uc.User)
+            //     .HasForeignKey<UserConfiguration>(uc => uc.UserId);
+            //
+            // modelBuilder.Entity<User>()
+            //     .HasMany(u => u.MonthCurrencies)
+            //     .WithOne(m => m.User)
+            //     .HasForeignKey(m => m.UserId);
         }
     }
 }

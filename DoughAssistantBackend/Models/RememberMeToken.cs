@@ -6,7 +6,7 @@ namespace DoughAssistantBackend.Models;
 public class RememberMeToken
 {
     [Key]
-    public string RememberBeTokenId { get; set; }
+    public string RememberMeTokenId { get; set; }
     [NotMapped]
     public string Token { get; set; }
     public string HashedToken { get; set; }
