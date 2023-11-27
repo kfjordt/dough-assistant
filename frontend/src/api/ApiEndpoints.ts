@@ -1,6 +1,10 @@
+const port = 44369
+
 export const ApiEndpoints = {
-    SESSIONS: "https://localhost:7025/api/Session",
-    USER: "https://localhost:7025/api/User",
-    EXPENSES: "https://localhost:7025/api/Expense",
-    CURRENCY: "https://localhost:7025/api/Currency",
+    POST_SessionCookie: `https://localhost:${port}/api/Authentication/SessionCookie`,
+    POST_RememberMeCookie: `https://localhost:${port}/api/Authentication/RememberMeCookie`,
+    POST_RememberMeCookieValidation: `https://localhost:${port}/api/Authentication/RememberMeCookieValidation`,
+    GET_Expense: `https://localhost:${port}/api/Expense`,
+    POST_Expense: `https://localhost:${port}/api/Expense`,
+    GET_Currency: `https://localhost:${port}/api/Currency`,
 }

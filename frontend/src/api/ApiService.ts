@@ -4,24 +4,41 @@ import { ExpenseDto } from '../models/dto/ExpenseDto';
 import { Currency } from '../models/data/Currency';
 
 export class ApiService {
-    static requestNewSession = async (googleJwt: string): Promise<UserDto> => {
+    // It should actually both be able to request session cookies from user id + remembermetoken 
+
+    static requestSessionCookie = async (googleJwt: string): Promise<string> => {
         const urlParams = new URLSearchParams()
         urlParams.append('googleJwt', googleJwt)
 
-        const requestNewSessionUrl = ApiEndpoints.SESSIONS + "?" + urlParams.toString()
+        const requestNewSessionUrl = ApiEndpoints.POST_SessionCookie + "?" + urlParams.toString()
         const response = await fetch(requestNewSessionUrl, {
-            credentials: 'include'
+            credentials: 'include',
+            method: "POST"
         })
 
         if (response.ok) {
-            return await response.json()
+            const responseBody = await response.text()
+            return responseBody
         } else {
             throw new Error(response.statusText)
         }
     }
 
+    static requestRememberMeCookie = async (userId: string) => {
+        const urlParams = new URLSearchParams()
+        urlParams.append('userId', userId)
+
+        const requestNewSessionUrl = ApiEndpoints.POST_RememberMeCookie + "?" + urlParams.toString()
+        const response = await fetch(requestNewSessionUrl, {
+            credentials: 'include',
+            method: "POST"
+        })
+
+
+    }
+
     static postNewExpense = async (expense: ExpenseDto) => {
-        const response = await fetch(ApiEndpoints.EXPENSES, {
+        const response = await fetch(ApiEndpoints.POST_Expense, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -34,7 +51,7 @@ export class ApiService {
     }
 
     static getExpenses = async () => {
-        const response = await fetch(ApiEndpoints.EXPENSES, {
+        const response = await fetch(ApiEndpoints.GET_Expense, {
             credentials: 'include'
         })
 
@@ -47,7 +64,7 @@ export class ApiService {
     }
 
     static getCurrencies = async (): Promise<Currency[]> => {
-        const response = await fetch(ApiEndpoints.CURRENCY)
+        const response = await fetch(ApiEndpoints.GET_Currency)
 
         if (response.ok) {
             const data = await response.json()
