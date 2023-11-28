@@ -8,7 +8,7 @@ const router = useRouter()
 const userStore = useUserStore()
 
 onMounted(() => {
-    const userHasValidRememberMeCookie = false // Check if remember me cookie is valid in the backend
+    const userHasValidRememberMeCookie = true // Check if remember me cookie is valid in the backend
     if (userHasValidRememberMeCookie) {
         router.push("main")
         return
