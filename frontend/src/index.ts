@@ -9,6 +9,7 @@ import MainView from './components/other/MainView.vue';
 import LoginScreen from './components/other/LoginScreen.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import EasterEgg from "./components/other/EasterEgg.vue"
+import "./index.css"
 
 allIcons.forEach(icon => {
     addIcons(icon);

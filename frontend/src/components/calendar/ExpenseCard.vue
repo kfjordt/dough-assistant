@@ -2,7 +2,7 @@
     <div :style="{
         backgroundColor: expenseCardStyle.background,
         color: expenseCardStyle.text,
-    }" class="expense-card">
+    }" class="z-10 text-xs rounded-md">
         <span class="expense-card-name">
             {{ props.name }}
         </span>
@@ -29,20 +29,3 @@ const props = defineProps({
 })
 
 </script>
-
-<style scoped>
-.expense-card {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    border-radius: 4px;
-    font-size: small;
-    margin-top: 1px;
-    padding: 2px;
-}
-
-.expense-card-amount {
-    font-weight: bolder;
-}
-</style>

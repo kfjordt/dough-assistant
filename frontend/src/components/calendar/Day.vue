@@ -3,8 +3,12 @@
         <div class="add-expense-container">
 
         </div>
-        <div>
+        <div class="flex flex-col">
             <span class="datelabel"> {{ props.day.getModel().getDate() }} </span>
+            <div class="flex flex-col">
+                <ExpenseCard v-for="(expense, idx) in expenses" :amount="expense.amount" :name="expense.name" :key="idx" />
+
+            </div>
         </div>
     </div>
 </template>
@@ -13,7 +17,6 @@
 import { DateTime } from '../../models/common/DateTime';
 import { PropType, ref } from 'vue';
 import { computed } from '@vue/reactivity';
-import { ApiService } from '../../api/ApiService';
 import { useExpensesStore } from '../../stores/expenses';
 import { useStyleStore } from '../../stores/style';
 import ExpenseCard from './ExpenseCard.vue';
@@ -25,6 +28,17 @@ const props = defineProps({
         required: true
     },
 })
+
+
+const expenses = [
+    {
+        amount: 20,
+        name: "test"
+    }, {
+        amount: 20,
+        name: "test2"
+    },
+]
 
 const selectedMonth = useCalendarStore().selectedDate.getMonth()
 const isPartOfCurrentMonth = computed(() => {
@@ -57,7 +71,6 @@ const handleAddExpense = () => {
 
     // expensesStore.refreshAsync()
 }
-
 </script>
 
 <style scoped>
