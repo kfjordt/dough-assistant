@@ -4,16 +4,66 @@ import { ExpenseDto } from '../models/dto/ExpenseDto';
 import { Currency } from '../models/data/Currency';
 
 export class ApiService {
-    // It should actually both be able to request session cookies from user id + remembermetoken 
+    static getLoggedInUserIdFromRememberMeCookie = async () => {
+        const response = await fetch(ApiEndpoints.GetLoggedInUserIdFromRememberMeCookie, {
+            credentials: 'include',
+        })
+
+        if (response.ok) {
+            const responseBody = await response.text()
+            return responseBody
+        } else {
+            throw new Error(response.statusText)
+        }
+    }
+    
+    static getLoggedInUserIdFromSessionCookie = async () => {
+        const response = await fetch(ApiEndpoints.GetLoggedInUserIdFromSessionCookie, {
+            credentials: 'include',
+        })
+
+        if (response.ok) {
+            const responseBody = await response.text()
+            return responseBody
+        } else {
+            throw new Error(response.statusText)
+        }
+    }
+
+    static isSessionCookieValid = async () => {
+        const response = await fetch(ApiEndpoints.IsSessionCookieValid, {
+            credentials: 'include',
+        })
+
+        if (response.ok) {
+            const responseBody = await response.text()
+            return responseBody
+        } else {
+            throw new Error(response.statusText)
+        }
+    }
 
     static requestSessionCookie = async (googleJwt: string): Promise<string> => {
         const urlParams = new URLSearchParams()
         urlParams.append('googleJwt', googleJwt)
 
-        const requestNewSessionUrl = ApiEndpoints.POST_SessionCookie + "?" + urlParams.toString()
+        const requestNewSessionUrl = ApiEndpoints.GetSessionCookie + "?" + urlParams.toString()
         const response = await fetch(requestNewSessionUrl, {
             credentials: 'include',
             method: "POST"
+        })
+
+        if (response.ok) {
+            const responseBody = await response.text()
+            return responseBody
+        } else {
+            throw new Error(response.statusText)
+        }
+    }
+
+    static isRememberMeCookieValid = async () => {
+        const response = await fetch(ApiEndpoints.IsRememberMeCookieValid, {
+            credentials: 'include',
         })
 
         if (response.ok) {
@@ -28,13 +78,18 @@ export class ApiService {
         const urlParams = new URLSearchParams()
         urlParams.append('userId', userId)
 
-        const requestNewSessionUrl = ApiEndpoints.POST_RememberMeCookie + "?" + urlParams.toString()
+        const requestNewSessionUrl = ApiEndpoints.GetRememberMeCookie + "?" + urlParams.toString()
         const response = await fetch(requestNewSessionUrl, {
             credentials: 'include',
             method: "POST"
         })
 
-
+        if (response.ok) {
+            const responseBody = await response.text()
+            return responseBody
+        } else {
+            throw new Error(response.statusText)
+        }
     }
 
     static postNewExpense = async (expense: ExpenseDto) => {
