@@ -40,9 +40,9 @@ namespace DoughAssistantBackend.Services
             return rememberMeToken;
         }
 
-        public bool ValidateToken(RememberMeTokenDto token, RememberMeToken tokenFromDb)
+        public bool ValidateToken(string rememberMeCookieToken, RememberMeToken tokenFromDb)
         {
-            return tokenFromDb.HashedToken == HashWithSha256(token.Token);
+            return tokenFromDb.HashedToken == HashWithSha256(rememberMeCookieToken);
         }
 
         public RememberMeToken RenewToken(RememberMeToken oldToken)

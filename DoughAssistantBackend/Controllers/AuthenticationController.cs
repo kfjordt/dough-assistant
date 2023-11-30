@@ -33,7 +33,59 @@ namespace DoughAssistantBackend.Controllers
             _googleService = googleService;
         }
 
-        [HttpPost("SessionCookie")]
+        [HttpGet("IsSessionCookieValid")]
+        public IActionResult IsSessionCookieValid()
+        {
+            var sessionKey = HttpContext.Request.Cookies["SessionKey"];
+
+            if (sessionKey == null)
+            {
+                return BadRequest("User does not have session token");
+            }
+            
+            bool sessionExists = _authenticationRepository.SessionExists(sessionKey);
+            return Ok(sessionExists);
+        }
+
+        [HttpGet("GetLoggedInUserIdFromSessionCookie")]
+        public IActionResult GetLoggedInUserIdFromSessionCookie()
+        {
+            string? sessionKey = HttpContext.Request.Cookies["SessionKey"];
+
+            if (sessionKey == null)
+            {
+                return BadRequest("Session key not found");
+            }
+            
+            User? userLookup = _authenticationRepository.GetUserBySessionId(sessionKey);
+
+            if (userLookup == null)
+            {
+                return BadRequest("User not found");
+            }
+
+            return Ok(userLookup.UserId);
+        }
+        
+        [HttpGet("GetLoggedInUserIdFromRememberMeCookie")]
+        public IActionResult GetLoggedInUserIdFromRememberMeCookie()
+        {
+            string? rememberMeCookieId = HttpContext.Request.Cookies["RememberMeId"];
+            if (rememberMeCookieId == null)
+            {
+                return BadRequest("Remember me token not found");
+            }
+            
+            RememberMeToken? rememberMeTokenLookup = _authenticationRepository.GetRememberMeTokenById(rememberMeCookieId);
+            if (rememberMeTokenLookup == null)
+            {
+                return BadRequest("Token not found");
+            }
+
+            return Ok(rememberMeTokenLookup.UserId);
+        }
+        
+        [HttpPost("GetSessionCookie")]
         public async Task<IActionResult> RequestSessionAsync([FromQuery] string googleJwt)
         {
             UserDto user;
@@ -49,7 +101,7 @@ namespace DoughAssistantBackend.Controllers
             if (!_userRepository.UserExists(user.UserId))
             {
                 var newUser = _mapper.Map<User>(user);
-                var userCreated = _userRepository.CreateUser(newUser);
+                _userRepository.CreateUser(newUser);
             }
             
             bool userAlreadyHasSession = _authenticationRepository.UserHasSession(user.UserId);
@@ -82,7 +134,7 @@ namespace DoughAssistantBackend.Controllers
             return Ok(user.UserId);
         }
 
-        [HttpPost("RememberMeCookie")]
+        [HttpPost("GetRememberMeCookie")]
         public IActionResult RequestRememberMeToken(string userId)
         {
             RememberMeToken rememberMeToken = _authenticationService.GenerateNewRememberMeToken(userId);
@@ -102,18 +154,26 @@ namespace DoughAssistantBackend.Controllers
             return Ok();
         }
 
-        [HttpPost("RememberMeCookieValidation")]
-        public IActionResult ValidateToken([FromBody] RememberMeTokenDto rememberMeTokenDto)
+        [HttpPost("IsRememberMeCookieValid")]
+        public IActionResult ValidateToken()
         {
+            var rememberMeCookieId = HttpContext.Request.Cookies["RememberMeId"];
+            var rememberMeCookieToken = HttpContext.Request.Cookies["RememberMeToken"];
+
+            if (rememberMeCookieId == null || rememberMeCookieToken == null)
+            {
+                return Ok(false);
+            }
+            
             RememberMeToken? rememberMeToken =
-                _authenticationRepository.GetRememberMeTokenById(rememberMeTokenDto.RememberMeTokenId);
+                _authenticationRepository.GetRememberMeTokenById(rememberMeCookieId);
 
             if (rememberMeToken == null)
             {
                 return BadRequest("Token does not exist.");
             }
 
-            bool isTokenValid = _authenticationService.ValidateToken(rememberMeTokenDto, rememberMeToken);
+            bool isTokenValid = _authenticationService.ValidateToken(rememberMeCookieToken, rememberMeToken);
             if (!isTokenValid)
             {
                 // Theft assumed
@@ -131,6 +191,21 @@ namespace DoughAssistantBackend.Controllers
                 SameSite = SameSiteMode.None,
                 Expires = DateTimeOffset.Now.AddDays(30)
             };
+            
+            SessionToken sessionToken = _authenticationService.GenerateNewSession(rememberMeToken.UserId);
+            
+            if (!_authenticationRepository.CreateSessionToken(sessionToken))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving session");
+                return StatusCode(500, ModelState);
+            }
+            
+            Response.Cookies.Append("SessionKey", sessionToken.SessionKey, new CookieOptions
+            {
+                Secure = true,
+                HttpOnly = true,
+                SameSite = SameSiteMode.None
+            });
             
             Response.Cookies.Append("RememberMeId", renewedToken.RememberMeTokenId, cookieOptions);
             Response.Cookies.Append("RememberMeToken", renewedToken.Token, cookieOptions);
