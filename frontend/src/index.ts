@@ -22,7 +22,7 @@ app.component("v-icon", OhVueIcon);
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        { path: '/main', component: MainView, name: "main" },
+        { path: '/', component: MainView, name: "" },
         { path: '/login', component: LoginScreen, name: "login" },
         { path: '/brainstorming', component: EasterEgg, name: "brainstorming" }
     ]
