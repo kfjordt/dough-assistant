@@ -7,10 +7,20 @@ import { ApiService } from '../api/ApiService';
 const router = useRouter()
 const userStore = useUserStore()
 
-onMounted(() => {
-    const userHasValidRememberMeCookie = true // Check if remember me cookie is valid in the backend
+onMounted(async () => {
+    const userHasValidSessionCookie = await ApiService.isSessionCookieValid()
+    if (userHasValidSessionCookie) {
+        const userId = await ApiService.getLoggedInUserIdFromSessionCookie()
+        userStore.setLoggedInUserId(userId)
+        router.push("")
+        return
+    }
+
+    const userHasValidRememberMeCookie = await ApiService.isRememberMeCookieValid()
     if (userHasValidRememberMeCookie) {
-        router.push("main")
+        const userId = await ApiService.getLoggedInUserIdFromRememberMeCookie()
+        userStore.setLoggedInUserId(userId)
+        router.push("")
         return
     }
 
