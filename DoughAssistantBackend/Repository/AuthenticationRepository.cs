@@ -27,13 +27,13 @@ namespace DoughAssistantBackend.Repository
             return _context.SessionTokens.FirstOrDefault(session => session.UserId == userId);
         }
 
-        public bool CreateRememberMeToken(RememberMeToken token)
+        public bool CreateRememberMeToken(AuthenticationToken token)
         {
             _context.Add(token);
             return Save();
         }
 
-        public RememberMeToken? GetRememberMeTokenById(string rememberMeTokenId)
+        public AuthenticationToken? GetRememberMeTokenById(string rememberMeTokenId)
         {
             return _context.RememberMeTokens
                 .FirstOrDefault(token => token.RememberMeTokenId == rememberMeTokenId);
@@ -44,7 +44,7 @@ namespace DoughAssistantBackend.Repository
             return _context.RememberMeTokens.Any(token => token.RememberMeTokenId == rememberMeTokenDtoId);
         }
 
-        public bool UpdateToken(RememberMeToken newToken)
+        public bool UpdateToken(AuthenticationToken newToken)
         {
             _context.Update(newToken);
             return Save();

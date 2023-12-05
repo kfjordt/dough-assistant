@@ -12,8 +12,8 @@ namespace DoughAssistantBackend.Mapping
             CreateMap<Expense, ExpenseDto>();
             CreateMap<ExpenseDto, Expense>();
             
-            CreateMap<RememberMeToken, RememberMeTokenDto>();
-            CreateMap<RememberMeTokenDto, RememberMeToken>();
+            CreateMap<AuthenticationToken, RememberMeTokenDto>();
+            CreateMap<RememberMeTokenDto, AuthenticationToken>();
             
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>()

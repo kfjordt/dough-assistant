@@ -13,7 +13,7 @@ namespace DoughAssistantBackend.DataContexts
         public DbSet<User> Users { get; set; }
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<SessionToken> SessionTokens { get; set; }
-        public DbSet<RememberMeToken> RememberMeTokens { get; set; }
+        public DbSet<AuthenticationToken> RememberMeTokens { get; set; }
         public DbSet<UserConfiguration> UserConfigurations { get; set; }
         public DbSet<MonthCurrency> MonthCurrencies { get; set; }
 
@@ -26,9 +26,9 @@ namespace DoughAssistantBackend.DataContexts
                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<User>()
-                .HasOne(u => u.RememberMeToken)
+                .HasOne(u => u.AuthenticationToken)
                 .WithOne(r => r.User)
-                .HasForeignKey<RememberMeToken>(r => r.UserId)
+                .HasForeignKey<AuthenticationToken>(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
             
             modelBuilder.Entity<Expense>()

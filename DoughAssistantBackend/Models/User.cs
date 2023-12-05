@@ -12,7 +12,7 @@ namespace DoughAssistantBackend.Models
         public DateTime RegistrationDate { get; set; }
         public List<Expense> Expenses { get; set; }
         public SessionToken SessionToken { get; set; }
-        public RememberMeToken RememberMeToken { get; set; }
+        public AuthenticationToken AuthenticationToken { get; set; }
         public List<MonthCurrency> MonthCurrencies { get; set; }
         public UserConfiguration UserConfiguration { get; set; }
     }
