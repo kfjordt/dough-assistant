@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DoughAssistantBackend.Models;
 
-public class RememberMeToken
+public class AuthenticationToken
 {
     [Key]
-    public string RememberMeTokenId { get; set; }
+    public string Id { get; set; }
     [NotMapped]
-    public string Token { get; set; }
-    public string HashedToken { get; set; }
+    public string Key { get; set; }
+    public string HashedKey { get; set; }
     public string UserId { get; set; }
     public User User { get; set; }
 }
