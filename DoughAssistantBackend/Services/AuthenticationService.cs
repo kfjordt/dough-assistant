@@ -11,6 +11,14 @@ namespace DoughAssistantBackend.Services
         {
         }
 
+        public struct CookieNames
+        {
+            public const string SessionCookieId = "DoughAssistant_SessionCookieId";
+            public const string SessionCookieKey = "DoughAssistant_SessionCookieKey";
+            public const string RememberMeCookieId = "DoughAssistant_RememberMeCookieId";
+            public const string RememberMeCookieKey = "DoughAssistant_RememberMeCookieKey";
+        }
+
         public SessionToken GenerateNewSession(string userId)
         {
             var session = new SessionToken()
@@ -23,13 +31,13 @@ namespace DoughAssistantBackend.Services
         }
 
 
-        public RememberMeToken GenerateNewRememberMeToken(string userId)
+        public AuthenticationToken GenerateNewRememberMeToken(string userId)
         {
             string seriesIdentifier = GenerateRandomNumber(128);
             string token = GenerateRandomNumber(128);
             string hashedToken = HashWithSha256(token);
 
-            RememberMeToken rememberMeToken = new RememberMeToken
+            AuthenticationToken authenticationToken = new AuthenticationToken
             {
                 RememberMeTokenId = seriesIdentifier,
                 Token = token,
@@ -37,18 +45,18 @@ namespace DoughAssistantBackend.Services
                 UserId = userId,
             };
 
-            return rememberMeToken;
+            return authenticationToken;
         }
 
-        public bool ValidateToken(string rememberMeCookieToken, RememberMeToken tokenFromDb)
+        public bool ValidateToken(string cookieKey, AuthenticationToken tokenFromDb)
         {
-            return tokenFromDb.HashedToken == HashWithSha256(rememberMeCookieToken);
+            return tokenFromDb.HashedKey == HashWithSha256(cookieKey);
         }
 
-        public RememberMeToken RenewToken(RememberMeToken oldToken)
+        public AuthenticationToken RenewToken(AuthenticationToken oldToken)
         {
             string newToken = GenerateRandomNumber(128);
-            return new RememberMeToken
+            return new AuthenticationToken
             {
                 RememberMeTokenId = oldToken.RememberMeTokenId,
                 Token = newToken,
