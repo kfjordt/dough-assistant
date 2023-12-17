@@ -12,9 +12,6 @@ namespace DoughAssistantBackend.Mapping
             CreateMap<Expense, ExpenseDto>();
             CreateMap<ExpenseDto, Expense>();
             
-            CreateMap<AuthenticationToken, RememberMeTokenDto>();
-            CreateMap<RememberMeTokenDto, AuthenticationToken>();
-            
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>()
                 .AfterMap((src, dest) => dest.RegistrationDate = DateTime.UtcNow); 

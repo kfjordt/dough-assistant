@@ -11,6 +11,13 @@ namespace DoughAssistantBackend.Services
         {
         }
 
+        public static CookieOptions DefaultCookieOptions = new CookieOptions()
+        {
+            Secure = true,
+            HttpOnly = true,
+            SameSite = SameSiteMode.None
+        };
+        
         public struct CookieNames
         {
             public const string SessionCookieId = "DoughAssistant_SessionCookieId";
@@ -18,58 +25,51 @@ namespace DoughAssistantBackend.Services
             public const string RememberMeCookieId = "DoughAssistant_RememberMeCookieId";
             public const string RememberMeCookieKey = "DoughAssistant_RememberMeCookieKey";
         }
-
-        public SessionToken GenerateNewSession(string userId)
+        
+        public AuthenticationToken GenerateAuthenticationToken(string userId)
         {
-            var session = new SessionToken()
+            string tokenId = GenerateRandomNumber(128);
+            string tokenKey = GenerateRandomNumber(128);
+            string hashedTokenKey = HashWithSha256(tokenKey);
+        
+            AuthenticationToken rememberMeToken = new AuthenticationToken
             {
-                UserId = userId,
-                SessionKey = Guid.NewGuid().ToString()
-            };
-
-            return session;
-        }
-
-
-        public AuthenticationToken GenerateNewRememberMeToken(string userId)
-        {
-            string seriesIdentifier = GenerateRandomNumber(128);
-            string token = GenerateRandomNumber(128);
-            string hashedToken = HashWithSha256(token);
-
-            AuthenticationToken authenticationToken = new AuthenticationToken
-            {
-                RememberMeTokenId = seriesIdentifier,
-                Token = token,
-                HashedToken = hashedToken,
+                Id = tokenId,
+                Key = tokenKey,
+                HashedKey = hashedTokenKey,
                 UserId = userId,
             };
-
-            return authenticationToken;
+        
+            return rememberMeToken;
         }
-
+        
         public bool ValidateToken(string cookieKey, AuthenticationToken tokenFromDb)
         {
             return tokenFromDb.HashedKey == HashWithSha256(cookieKey);
         }
 
-        public AuthenticationToken RenewToken(AuthenticationToken oldToken)
+        public AuthenticationToken RenewToken(AuthenticationToken token)
         {
-            string newToken = GenerateRandomNumber(128);
-            return new AuthenticationToken
-            {
-                RememberMeTokenId = oldToken.RememberMeTokenId,
-                Token = newToken,
-                HashedToken = HashWithSha256(newToken),
-                UserId = oldToken.UserId,
-            };
-        }
+            var renewedKey = GenerateRandomNumber(128);
+            var renewedHashedKey = HashWithSha256(renewedKey);
 
+            var renewedToken = new AuthenticationToken()
+            {
+                ExpiryDate = token.ExpiryDate,
+                HashedKey = renewedHashedKey,
+                Key = renewedKey,
+                Id = token.Id,
+                UserId = token.UserId
+            };
+
+            return renewedToken;
+        }
+        
         private static string GenerateRandomNumber(int bits)
         {
             return Convert.ToBase64String(RandomNumberGenerator.GetBytes(bits / 8));
         }
-
+        
         private static string HashWithSha256(string input)
         {
             // Taken from https://stackoverflow.com/a/73126261/19391732
@@ -77,5 +77,7 @@ namespace DoughAssistantBackend.Services
             var inputHash = SHA256.HashData(inputBytes);
             return Convert.ToHexString(inputHash);
         }
+        
+        
     }
 }

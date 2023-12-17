@@ -2,9 +2,9 @@
     <div v-if="expensesRefreshed" :style="{
         backgroundColor: calendarStyle.main.border,
     }" class="calendar">
-        <Day :style="{
+        <!-- <Day :style="{
             backgroundColor: calendarStyle.main.background,
-        }" v-for="(day, index) in daysInCurrentMonth" :day="day" :key="index" />
+        }" v-for="(day, index) in daysInCurrentMonth" :day="day" :key="index" /> -->
     </div>
 </template>
 

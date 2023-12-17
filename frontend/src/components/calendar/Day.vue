@@ -1,8 +1,8 @@
 <template>
     <div class="day">
-        <div class="add-expense-container">
+        <!-- <div class="add-expense-container">
 
-        </div>
+        </div> -->
         <div class="flex flex-col">
             <span class="datelabel"> {{ props.day.getModel().getDate() }} </span>
             <div class="flex flex-col">

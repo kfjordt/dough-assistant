@@ -12,21 +12,21 @@ namespace DoughAssistantBackend.DataContexts
 
         public DbSet<User> Users { get; set; }
         public DbSet<Expense> Expenses { get; set; }
-        public DbSet<SessionToken> SessionTokens { get; set; }
+        public DbSet<AuthenticationToken> SessionTokens { get; set; }
         public DbSet<AuthenticationToken> RememberMeTokens { get; set; }
         public DbSet<UserConfiguration> UserConfigurations { get; set; }
         public DbSet<MonthCurrency> MonthCurrencies { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-               .HasOne(u => u.SessionToken)
-               .WithOne(s => s.User)
-               .HasForeignKey<SessionToken>(s => s.UserId)
-               .OnDelete(DeleteBehavior.Restrict);
+            // modelBuilder.Entity<User>()
+            //    .HasOne(u => u.SessionToken)
+            //    .WithOne(s => s.User)
+            //    .HasForeignKey<SessionToken>(s => s.UserId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<User>()
-                .HasOne(u => u.AuthenticationToken)
+                .HasOne(u => u.RememberMeToken)
                 .WithOne(r => r.User)
                 .HasForeignKey<AuthenticationToken>(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
